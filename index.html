@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贵州迎宾酒集团-线上购酒平台</title>
+<script>
+// ========== 全部配置统一放顶部，直接修改这里 ==========
+const CONFIG = {
+    // 网站基础
+    siteName: "贵州迎宾酒集团",
+    copyrightYear: "2026",
+    copyrightDesc: "贵州迎宾酒集团 版权所有 严禁盗用",
+    statToday: "1256",
+    statTotal: "138962",
+
+    // 分享设置
+    shareCopyTip: "链接复制成功，可转发好友！",
+
+    // 自动微信等待秒数
+    waitSecond: 15,
+    wechatJumpUrl: "weixin://dl/chat?username=aSky250", // 拉起微信聊天
+
+    // 全部二维码图片地址
+    qrTopRight: "./qr_top.png", // 右上角固定下单码
+    qrFloatService: "./qr_float.png", // 游走客服码
+    qrPopupBuy: "./qr_pop.png", // 弹窗内下单二维码
+
+    // 弹窗文案
+    popupTitle: "扫码联系客服下单",
+    popupHint: "微信扫描二维码添加客服咨询下单",
+    popupCloseText: "关闭窗口",
+
+    // 四款商品列表
+    goods: [
+        {
+            name: "贵州迎宾酒·经典迎宾53度",
+            desc: "纯粮坤沙工艺，酱香突出，入口绵柔，家用自饮、日常小聚优选，500ml单瓶。",
+            price: "¥198 /瓶",
+            imgTxt: "【产品实拍：经典迎宾】"
+        },
+        {
+            name: "贵州迎宾酒·贵宾尊享礼盒",
+            desc: "高端礼盒包装，三年大曲坤沙，送礼宴请贵客专用，500ml*2瓶装。",
+            price: "¥598 /盒",
+            imgTxt: "【产品实拍：贵宾尊享礼盒】"
+        },
+        {
+            name: "贵州迎宾酒·五年陈酿",
+            desc: "五年基酒勾调，空杯留香持久，商务聚餐、收藏送礼皆宜，500ml。",
+            price: "¥328 /瓶",
+            imgTxt: "【产品实拍：五年陈酿】"
+        },
+        {
+            name: "贵州迎宾酒·封坛纪念酒",
+            desc: "传统手工封坛，酒体醇厚甘甜，限量纪念款，适合宴席、收藏留念。",
+            price: "¥888 /坛",
+            imgTxt: "【产品实拍：封坛纪念款】"
+        }
+    ]
+};
+// ==================================================
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",SimHei,sans-serif;}
+body{background:#f8f3e8;padding-bottom:130px;}
+
+/* 顶部栏 */
+.header{background:#990000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.brand-title{font-size:26px;font-weight:bold;letter-spacing:2px;}
+.share-btn{background:#ffb800;border:none;padding:8px 16px;border-radius:6px;color:#000;font-weight:bold;cursor:pointer;}
+
+/* 右上角固定二维码 */
+.top-qr-box{position:fixed;top:80px;right:20px;background:#fff;border:2px solid #990000;padding:12px;border-radius:8px;width:140px;text-align:center;z-index:99;}
+.top-qr-box img{width:110px;height:110px;border:1px solid #ddd;}
+.top-qr-box p{margin-top:8px;font-size:14px;color:#990000;font-weight:bold;}
+
+/* 全屏游走咨询二维码 */
+.float-qr{position:fixed;width:120px;height:145px;background:#fff;border:2px solid #d4af37;padding:8px;border-radius:8px;text-align:center;z-index:98;}
+.float-qr img{width:100px;height:100px;}
+.float-qr span{font-size:12px;color:#990000;}
+
+/* 商品区域 */
+.container{max-width:1000px;margin:40px auto;padding:0 20px;}
+.goods-main-title{text-align:center;font-size:22px;color:#990000;margin-bottom:30px;border-bottom:2px solid #d4af37;padding-bottom:10px;}
+.goods-wrap{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+.goods-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px #ddd;border:1px solid #e0d0b0;}
+.goods-img-area{width:100%;height:260px;background:#f1ece0;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px;}
+.goods-info{padding:16px;}
+.goods-name{font-size:18px;color:#990000;font-weight:bold;margin-bottom:10px;}
+.goods-desc{font-size:14px;color:#555;line-height:1.6;margin-bottom:12px;}
+.goods-price{font-size:20px;color:#c00;font-weight:bold;margin-bottom:16px;}
+.buy-btn{width:100%;background:#990000;color:#fff;border:none;padding:10px;border-radius:6px;font-size:16px;cursor:pointer;}
+.buy-btn:hover{background:#b30000;}
+
+/* 下单弹窗遮罩 */
+.mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;z-index:9999;align-items:center;justify-content:center;}
+.buy-popup{background:#fff;padding:30px;border-radius:12px;width:320px;text-align:center;}
+.buy-popup h3{color:#990000;margin-bottom:15px;font-size:20px;}
+.pop-qr{width:200px;height:200px;margin:0 auto 15px;border:1px solid #eee;}
+.pop-tip-text{font-size:15px;color:#333;margin-bottom:22px;}
+.pop-close{padding:9px 26px;background:#990000;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;}
+
+/* 底部版权统计 */
+.footer{position:fixed;bottom:0;left:0;width:100%;background:#222;color:#ccc;text-align:center;padding:12px 0;font-size:13px;}
+.footer p{line-height:1.8;}
+
+/* 手机端自动单列 */
+@media (max-width:768px){
+    .goods-wrap{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<!-- 顶部头部 -->
+<div class="header">
+    <h1 class="brand-title" id="pageTitle"></h1>
+    <button class="share-btn" id="shareBtn">分享好友</button>
+</div>
+
+<!-- 右上角固定扫码下单 -->
+<div class="top-qr-box">
+    <img id="topQrImg" alt="下单二维码">
+    <p>扫码立即下单</p>
+</div>
+
+<!-- 游走悬浮客服二维码 -->
+<div class="float-qr" id="floatQrBox">
+    <img id="floatQrImg" alt="客服咨询二维码">
+    <span>扫码咨询客服</span>
+</div>
+
+<!-- 商品列表容器 -->
+<div class="container">
+    <h2 class="goods-main-title">贵州迎宾酒系列产品</h2>
+    <div class="goods-wrap" id="goodsContainer"></div>
+</div>
+
+<!-- 下单弹窗 -->
+<div class="mask" id="maskLayer">
+    <div class="buy-popup">
+        <h3 id="popTitleDom"></h3>
+        <img class="pop-qr" id="popQrDom" alt="客服下单二维码">
+        <p class="pop-tip-text" id="popTipDom"></p>
+        <button class="pop-close" id="popCloseBtn"></button>
+    </div>
+</div>
+
+<!-- 底部统计版权 -->
+<div class="footer">
+    <p id="statLine"></p>
+    <p id="copyrightLine"></p>
+</div>
+
+<script>
+const cfg = CONFIG;
+let timerInstance = null;
+
+// 页面静态渲染赋值
+document.getElementById("pageTitle").innerText = cfg.siteName;
+document.getElementById("topQrImg").src = cfg.qrTopRight;
+document.getElementById("floatQrImg").src = cfg.qrFloatService;
+document.getElementById("popQrDom").src = cfg.qrPopupBuy;
+document.getElementById("popTitleDom").innerText = cfg.popupTitle;
+document.getElementById("popTipDom").innerText = cfg.popupHint;
+document.getElementById("popCloseBtn").innerText = cfg.popupCloseText;
+document.getElementById("statLine").innerText = `网站访问统计：今日访问 ${cfg.statToday} 人次 | 总访问 ${cfg.statTotal} 人次`;
+document.getElementById("copyrightLine").innerText = `©${cfg.copyrightYear} ${cfg.copyrightDesc}`;
+
+// 自动循环渲染商品
+const goodsBox = document.getElementById("goodsContainer");
+cfg.goods.forEach(item => {
+    let card = document.createElement("div");
+    card.className = "goods-card";
+    card.innerHTML = `
+        <div class="goods-img-area">${item.imgTxt}</div>
+        <div class="goods-info">
+            <h3 class="goods-name">${item.name}</h3>
+            <p class="goods-desc">${item.desc}</p>
+            <div class="goods-price">售价：${item.price}</div>
+            <button class="buy-btn">立即购买</button>
+        </div>
+    `;
+    goodsBox.appendChild(card);
+});
+
+// 分享复制链接
+const shareBtn = document.getElementById("shareBtn");
+shareBtn.onclick = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        alert(cfg.shareCopyTip);
+    });
+};
+
+// 弹窗逻辑：打开弹窗倒计时，无倒计时文字，15秒自动打开微信
+const mask = document.getElementById("maskLayer");
+const closeBtn = document.getElementById("popCloseBtn");
+const allBuyBtns = document.querySelectorAll(".buy-btn");
+
+// 打开下单弹窗
+function openBuyPopup(){
+    mask.style.display = "flex";
+    clearInterval(timerInstance);
+    let leftTime = cfg.waitSecond;
+    timerInstance = setInterval(()=>{
+        leftTime--;
+        if(leftTime <= 0){
+            clearInterval(timerInstance);
+            window.location.href = cfg.wechatJumpUrl;
+        }
+    },1000);
+}
+
+// 关闭弹窗，清除计时并重置
+function closeBuyPopup(){
+    mask.style.display = "none";
+    clearInterval(timerInstance);
+}
+
+// 绑定所有购买按钮弹窗
+allBuyBtns.forEach(btn=> btn.onclick = openBuyPopup);
+closeBtn.onclick = closeBuyPopup;
+mask.onclick = e => {if(e.target === mask) closeBuyPopup();};
+
+// 全屏游走二维码动画
+const floatBox = document.getElementById("floatQrBox");
+let x = 40, y = 100;
+let speedX = 2, speedY = 1.6;
+function moveFloatQr(){
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const boxW = floatBox.offsetWidth;
+    const boxH = floatBox.offsetHeight;
+    x += speedX;
+    y += speedY;
+    if(x <= 0 || x + boxW >= w) speedX = -speedX;
+    if(y <= 0 || y + boxH >= h) speedY = -speedY;
+    floatBox.style.left = x + "px";
+    floatBox.style.top = y + "px";
+    requestAnimationFrame(moveFloatQr);
+}
+moveFloatQr();
+</script>
+</body>
+</html>
