@@ -17,7 +17,7 @@ const CONFIG = {
     shareCopyTip: "链接复制成功，可转发好友！",
     // 自动微信等待秒数
     waitSecond: 15,
-    wechatJumpUrl: "weixin://dl/chat?username=aSky250", // 拉起微信聊天
+    wechatJumpUrl: "weixin://", // 拉起微信聊天
     // 全部二维码图片地址
     qrTopRight: "./qr_top.png", // 右上角固定下单码
     qrFloatService: "./qr_float.png", // 游走客服码
@@ -225,7 +225,7 @@ function moveFloatQr(){
 moveFloatQr();
 </script>
 <!-- 底部左侧竖排简历按钮区域 -->
-<div style="position:fixed; left:20px; bottom:30px; display:flex; flex-direction:column; gap:12px; z-index:999;">
+<div style="position:fixed; left:20px; bottom:80px; display:flex; flex-direction:column; gap:12px; z-index:999;">
     <!-- 按钮1 -->
     <a href="dba.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">DBA数据库管理员</a>
     <!-- 按钮2 -->
@@ -243,7 +243,7 @@ moveFloatQr();
 .super-btn {
   position: fixed;
   right: 80px; /* 右下角往左偏移，数值越大越靠左 */
-  bottom: 30px;
+  bottom: 80px;
   padding: 12px 24px;
   background: #2563eb;
   color: #fff;

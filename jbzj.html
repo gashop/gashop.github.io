@@ -12,8 +12,8 @@
             siteName: "精选实用脚本工具",
             qrTextTop: "扫码咨询",     // 顶部二维码文字
             qrTextFloat: "扫码下单",   // 游走二维码文字
-            qrTextBottomWechat: "添加微信，领取福利(一对一咨询)", // 底部微信二维码
-            qrTextBottomSite: "保存二维码，下次不迷路（点击图片可保存）", // 本站网页二维码
+            qrTextBottomWechat: "添加微信，领取福利", // 底部微信二维码
+            qrTextBottomSite: "长按或双击二维码保存", // 本站网页二维码
             // 交互提示文案（通俗大白话）
             tipHoverBasic: "基础版本，简单好用，满足日常使用",
             tipClickAdvanced: "功能更丰富，上手简单好操作",
@@ -65,7 +65,7 @@
             box-sizing: border-box;
             font-family: "Microsoft YaHei", sans-serif;
         }
-        body {
+		body {
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
@@ -449,7 +449,7 @@
                 </div>
             </div>
         </div>
-        <div class="visit-stat">本站累计访问：<span id="visitCount">12589</span> 人次</div>
+        <div class="visit-stat">本站累计访问：<span id="visitCount">12589</span> 次</div>
         <div class="warm-tip"></div>
         <div class="copyright"></div>
     </footer>
@@ -473,7 +473,7 @@
             if(autoJumpTimer){
                 clearTimeout(autoJumpTimer);
             }
-            // 30秒自动唤起微信
+            // 15秒自动唤起微信
             autoJumpTimer = setTimeout(function(){
                 window.location.href = WECHAT_URL;
                 closeModal();
@@ -595,6 +595,7 @@
             x += speedX;
             y += speedY;
             floatBox.style.left = x + 'px';
+			floatBox.style.top = y + 'px';
             requestAnimationFrame(moveBox);
         }
         moveBox();
