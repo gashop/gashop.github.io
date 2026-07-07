@@ -103,6 +103,86 @@ body{background:#f8f3e8;padding-bottom:130px;}
 @media (max-width:768px){
     .goods-wrap{grid-template-columns:1fr;}
 }
+/* 人生必备弹窗样式补充 */
+#modalMask{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:99999;
+    align-items:center;
+    justify-content:center;
+}
+.modal-box{
+    background:#fff;
+    width:320px;
+    border-radius:8px;
+    padding:20px;
+}
+.modal-box h3{
+    text-align:center;
+    margin-top:0;
+    color:#333;
+}
+#abilityList{
+    list-style:none;
+    padding:0;
+    margin:20px 0;
+}
+#abilityList li{
+    padding:12px 10px;
+    border-bottom:1px solid #eee;
+    cursor:pointer;
+    font-size:15px;
+}
+#abilityList li:last-child{
+    border-bottom:none;
+}
+#abilityList li:hover{
+    background:#f5f5f5;
+}
+#closeModal{
+    width:100%;
+    padding:8px;
+    background:#999;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+}
+#lifeBtn{
+    padding:12px 24px;
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+    z-index:999;
+    cursor:pointer;
+}
+#lifeBtn:hover{
+    background:#1d4ed8;
+}
+.super-btn {
+  position: fixed;
+  right: 80px; /* 右下角往左偏移，数值越大越靠左 */
+  bottom: 80px;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  z-index: 999;
+}
+.super-btn:hover {
+  background: #1d4ed8;
+}
 </style>
 </head>
 <body>
@@ -135,6 +215,25 @@ body{background:#f8f3e8;padding-bottom:130px;}
         <button class="pop-close" id="popCloseBtn"></button>
     </div>
 </div>
+
+<!-- ========== 人生必备按钮+弹窗 HTML ========== -->
+<button id="lifeBtn" style="position:fixed;right:80px;bottom:150px;">人生必备</button>
+<div id="modalMask">
+    <div class="modal-box">
+        <h3>人生必备能力列表</h3>
+        <ul id="abilityList">
+            <li data-url="article1.html">变现能力</li>
+            <li data-url="article2.html">恋爱能力</li>
+            <li data-url="article3.html">口才、演讲、闲聊</li>
+            <li data-url="article4.html">健康身体</li>
+            <li data-url="article5.html">双重标准</li>
+            <li data-url="article6.html">英语口语交流、阅读</li>
+            <li data-url="article7.html">语文写作</li>
+        </ul>
+        <button id="closeModal">关闭</button>
+    </div>
+</div>
+
 <!-- 底部统计版权 -->
 <div class="footer">
     <p id="statLine"></p>
@@ -223,6 +322,32 @@ function moveFloatQr(){
     requestAnimationFrame(moveFloatQr);
 }
 moveFloatQr();
+
+// ========== 人生必备弹窗JS逻辑（已修改为新窗口打开） ==========
+const openBtn = document.getElementById('lifeBtn');
+const modalMask = document.getElementById('modalMask');
+const closeModalBtn = document.getElementById('closeModal');
+const listItems = document.querySelectorAll('#abilityList li');
+
+// 打开弹窗
+openBtn.onclick = () => {
+    modalMask.style.display = 'flex';
+}
+// 关闭弹窗
+closeModalBtn.onclick = () => {
+    modalMask.style.display = 'none';
+}
+// 点击遮罩空白关闭弹窗
+modalMask.onclick = (e) => {
+    if(e.target === modalMask) modalMask.style.display = 'none';
+}
+// 点击列表项【新标签页打开文章】
+listItems.forEach(item => {
+    item.onclick = () => {
+        const link = item.dataset.url;
+        window.open(link, '_blank');
+    }
+})
 </script>
 <!-- 底部左侧竖排简历按钮区域 -->
 <div style="position:fixed; left:20px; bottom:80px; display:flex; flex-direction:column; gap:12px; z-index:999;">
@@ -239,24 +364,6 @@ moveFloatQr();
 	<!-- 按钮6 -->
     <a href="rdjs.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">弱电实施技术员</a>
 </div>
-<style>
-.super-btn {
-  position: fixed;
-  right: 80px; /* 右下角往左偏移，数值越大越靠左 */
-  bottom: 80px;
-  padding: 12px 24px;
-  background: #2563eb;
-  color: #fff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  z-index: 999;
-}
-.super-btn:hover {
-  background: #1d4ed8;
-}
-</style>
 
 <!-- target="_blank 新窗口打开 -->
 <a href="jbzj.html" target="_blank" class="super-btn">脚本之家</a>
