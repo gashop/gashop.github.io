@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>左侧目录-右侧PDF工作区</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+body {
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+/* 左侧目录栏 */
+.left-menu {
+    width: 260px;
+    background: #1f2937;
+    color: #fff;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.menu-title {
+    padding: 20px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #374151;
+}
+.menu-list {
+    flex: 1;
+    overflow-y: auto;
+}
+.menu-item {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+.menu-item:hover {
+    background: #374151;
+}
+.menu-item.active {
+    background: #2563eb;
+}
+/* 左侧底部操作按钮区 */
+.menu-btn-box {
+    padding:12px 16px;
+    border-top:1px solid #374151;
+    display:flex;
+    gap:8px;
+}
+.menu-btn-box button {
+    flex:1;
+    padding:8px 0;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+}
+#addBtn {
+    background:#22c55e;
+    color:#fff;
+}
+#delBtn {
+    background:#ef4444;
+    color:#fff;
+}
+/* 弹窗样式 */
+.pop-mask {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+.pop-box {
+    width:340px;
+    background:#fff;
+    border-radius:8px;
+    padding:24px;
+}
+.pop-box h3 {
+    color:#1f2937;
+    margin-bottom:18px;
+    text-align:center;
+}
+.pop-item {
+    margin-bottom:14px;
+}
+.pop-item label {
+    display:block;
+    color:#333;
+    margin-bottom:6px;
+}
+.pop-item input {
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:4px;
+    font-size:14px;
+}
+.pop-btn-group {
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+.pop-btn-group button {
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+}
+#confirmAdd {
+    background:#2563eb;
+    color:#fff;
+}
+#cancelPop {
+    background:#999;
+    color:#fff;
+}
+/* 右侧内容区域 */
+.right-content {
+    flex: 1;
+    background: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+}
+.pdf-top-tip{
+    padding:12px 24px;
+    background:#fff;
+    border-bottom:1px solid #ddd;
+}
+#pdfFrame{
+    flex:1;
+    width:100%;
+    border:none;
+}
+/* 手机适配：左右改为上下 */
+@media (max-width:768px) {
+    body {
+        flex-direction: column;
+    }
+    .left-menu {
+        width: 100%;
+        height: 35vh;
+    }
+    .right-content{
+        height:65vh;
+    }
+}
+</style>
+</head>
+<body>
+<!-- 新增目录弹窗 -->
+<div class="pop-mask" id="popMask">
+    <div class="pop-box">
+        <h3>新增目录条目</h3>
+        <div class="pop-item">
+            <label>目录显示名称</label>
+            <input type="text" id="inputName" placeholder="例如：理财能力">
+        </div>
+        <div class="pop-item">
+            <label>对应PDF文件路径</label>
+            <input type="text" id="inputPdf" placeholder="例如：finance.pdf">
+        </div>
+        <div class="pop-btn-group">
+            <button id="confirmAdd">确认添加</button>
+            <button id="cancelPop">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 左侧目录 -->
+<div class="left-menu">
+    <div class="menu-title">恋爱目录</div>
+    <div class="menu-list" id="menuListBox">
+        <div class="menu-item active" data-pdf="ability1.pdf">恋爱指南</div>
+        <div class="menu-item" data-pdf="ability2.pdf">IOI_IOD聊天实操</div>
+        <div class="menu-item" data-pdf="ability3.pdf">约会计划</div>
+        <div class="menu-item" data-pdf="ability4.pdf">房中秘术</div>
+        <div class="menu-item" data-pdf="ability5.pdf">莞式一条龙·28项色情ISO</div>
+        <div class="menu-item" data-pdf="ability6.pdf">专治聊天完成版</div>
+    </div>
+    <!-- 底部新增、删除按钮 -->
+    <div class="menu-btn-box">
+        <button id="addBtn">新增</button>
+        <button id="delBtn">禁用</button>
+    </div>
+</div>
+
+<!-- 右侧PDF工作区 -->
+<div class="right-content">
+    <div class="pdf-top-tip">CurrentDocument：<span id="pdfName">ability1.pdf</span></div>
+    <iframe id="pdfFrame" src="ability1.pdf"></iframe>
+</div>
+
+<script>
+const menuListBox = document.getElementById('menuListBox');
+const pdfFrame = document.getElementById('pdfFrame');
+const pdfNameDom = document.getElementById('pdfName');
+// 弹窗元素
+const popMask = document.getElementById('popMask');
+const inputName = document.getElementById('inputName');
+const inputPdf = document.getElementById('inputPdf');
+const confirmAdd = document.getElementById('confirmAdd');
+const cancelPop = document.getElementById('cancelPop');
+const addBtn = document.getElementById('addBtn');
+const delBtn = document.getElementById('delBtn');
+
+// 获取所有菜单项
+function getAllMenuItems() {
+    return document.querySelectorAll('.menu-item');
+}
+// 绑定菜单点击事件
+function bindMenuClick() {
+    const items = getAllMenuItems();
+    items.forEach(item => {
+        item.onclick = function() {
+            items.forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+            const pdfFile = this.dataset.pdf;
+            pdfFrame.src = pdfFile;
+            pdfNameDom.innerText = pdfFile;
+        }
+    })
+}
+// 初始化绑定
+bindMenuClick();
+
+// 打开新增弹窗
+addBtn.onclick = () => {
+    popMask.style.display = 'flex';
+    inputName.value = '';
+    inputPdf.value = '';
+}
+// 关闭弹窗
+cancelPop.onclick = () => {
+    popMask.style.display = 'none';
+}
+popMask.onclick = (e) => {
+    if(e.target === popMask) popMask.style.display = 'none';
+}
+
+// 确认新增目录
+confirmAdd.onclick = () => {
+    const name = inputName.value.trim();
+    const pdfPath = inputPdf.value.trim();
+    if(!name || !pdfPath) {
+        alert('请填写目录名称和PDF路径！');
+        return;
+    }
+    // 创建新菜单DOM
+    const newItem = document.createElement('div');
+    newItem.className = 'menu-item';
+    newItem.dataset.pdf = pdfPath;
+    newItem.innerText = name;
+    menuListBox.appendChild(newItem);
+    // 重新绑定点击
+    bindMenuClick();
+    // 关闭弹窗
+    popMask.style.display = 'none';
+}
+
+// 删除选中条目
+delBtn.onclick = () => {
+    const items = getAllMenuItems();
+    let activeItem = null;
+    items.forEach(item => {
+        if(item.classList.contains('active')) {
+            activeItem = item;
+        }
+    });
+    if(!activeItem) {
+        alert('请先选中要删除的目录！');
+        return;
+    }
+    if(confirm('确定删除该目录条目？')) {
+        activeItem.remove();
+        // 删除后重置iframe提示
+        pdfFrame.src = '';
+        pdfNameDom.innerText = '暂无文档';
+    }
+}
+</script>
+</body>
+</html>
