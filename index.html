@@ -4,29 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>贵州迎宾酒-线上购酒平台</title>
+<!-- 全局配置参数 -->
 <script>
-// ========== 全部配置统一放顶部，直接修改这里 ==========
+// ========== 网站全局配置（统一修改区） ==========
 const CONFIG = {
-    // 网站基础
+    // 网站基础信息
     siteName: "贵州迎宾酒集团",
     copyrightYear: "2026",
     copyrightDesc: "茅台镇·迎宾酒集团-小马哥 版权所有 严禁盗用",
     statToday: "1256",
     statTotal: "138962",
-    // 分享设置
+    // 分享功能
     shareCopyTip: "链接复制成功，可转发好友！",
-    // 自动微信等待秒数
+    // 下单弹窗自动跳转微信倒计时
     waitSecond: 15,
-    wechatJumpUrl: "weixin://", // 拉起微信聊天
-    // 全部二维码图片地址
-    qrTopRight: "./qr_top.png", // 右上角固定下单码
-    qrFloatService: "./qr_float.png", // 游走客服码
-    qrPopupBuy: "./qr_pop.png", // 弹窗内下单二维码
-    // 弹窗文案
+    wechatJumpUrl: "weixin://",
+    // 二维码图片路径
+    qrTopRight: "./qr_top.png",
+    qrFloatService: "./qr_float.png",
+    qrPopupBuy: "./qr_pop.png",
+    // 下单弹窗文案
     popupTitle: "扫码联系客服下单",
     popupHint: "微信扫描(或者长按)二维码添加客服咨询下单",
     popupCloseText: "关闭窗口",
-    // 四款商品列表【图片文件名已写死，你直接把图片重命名对应名字即可】
+    // 商品数据列表
     goods: [
         {
             name: "贵州迎宾酒·经典迎宾53度",
@@ -57,115 +58,78 @@ const CONFIG = {
 // ==================================================
 </script>
 <style>
+/* ========== 1.全局基础样式 ========== */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",SimHei,sans-serif;}
 body{background:#f8f3e8;padding-bottom:130px;}
-/* 顶部栏 */
+
+/* ========== 2.页面主体布局：头部、商品、底部 ========== */
+/* 顶部导航栏 */
 .header{background:#990000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
 .brand-title{font-size:26px;font-weight:bold;letter-spacing:2px;}
 .share-btn{background:#ffb800;border:none;padding:8px 16px;border-radius:6px;color:#000;font-weight:bold;cursor:pointer;}
-/* 右上角固定二维码 */
-.top-qr-box{position:fixed;top:80px;right:20px;background:#fff;border:2px solid #990000;padding:12px;border-radius:8px;width:140px;text-align:center;z-index:99;}
-.top-qr-box img{width:110px;height:110px;border:1px solid #ddd;}
-.top-qr-box p{margin-top:8px;font-size:14px;color:#990000;font-weight:bold;}
-/* 全屏游走咨询二维码 */
-.float-qr{position:fixed;width:120px;height:145px;background:#fff;border:2px solid #d4af37;padding:8px;border-radius:8px;text-align:center;z-index:98;}
-.float-qr img{width:100px;height:100px;}
-.float-qr span{font-size:12px;color:#990000;}
-/* 商品区域 */
+
+/* 商品展示区域 */
 .container{max-width:1000px;margin:40px auto;padding:0 20px;}
 .goods-main-title{text-align:center;font-size:22px;color:#990000;margin-bottom:30px;border-bottom:2px solid #d4af37;padding-bottom:10px;}
 .goods-wrap{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
 .goods-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px #ddd;border:1px solid #e0d0b0;}
 .goods-img-area{width:100%;height:260px;background:#f1ece0;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px;overflow:hidden;}
-/* 商品图片铺满容器不变形 */
-.goods-img-area img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
+.goods-img-area img{width:100%;height:100%;object-fit:cover;}
 .goods-info{padding:16px;}
 .goods-name{font-size:18px;color:#990000;font-weight:bold;margin-bottom:10px;}
 .goods-desc{font-size:14px;color:#555;line-height:1.6;margin-bottom:12px;}
 .goods-price{font-size:20px;color:#c00;font-weight:bold;margin-bottom:16px;}
 .buy-btn{width:100%;background:#990000;color:#fff;border:none;padding:10px;border-radius:6px;font-size:16px;cursor:pointer;}
 .buy-btn:hover{background:#b30000;}
-/* 下单弹窗遮罩 */
+
+/* 底部版权栏 */
+.footer{position:fixed;bottom:0;left:0;width:100%;background:#222;color:#ccc;text-align:center;padding:12px 0;font-size:13px;}
+.footer p{line-height:1.8;}
+
+/* ========== 3.固定悬浮二维码组件 ========== */
+/* 右上角固定下单二维码 */
+.top-qr-box{position:fixed;top:80px;right:20px;background:#fff;border:2px solid #990000;padding:12px;border-radius:8px;width:140px;text-align:center;z-index:99;}
+.top-qr-box img{width:110px;height:110px;border:1px solid #ddd;}
+.top-qr-box p{margin-top:8px;font-size:14px;color:#990000;font-weight:bold;}
+/* 游走浮动客服二维码 */
+.float-qr{position:fixed;width:120px;height:145px;background:#fff;border:2px solid #d4af37;padding:8px;border-radius:8px;text-align:center;z-index:98;}
+.float-qr img{width:100px;height:100px;}
+.float-qr span{font-size:12px;color:#990000;}
+
+/* ========== 4.弹窗模块样式（按业务分组） ========== */
+/* 4.1 下单扫码弹窗 */
 .mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;z-index:9999;align-items:center;justify-content:center;}
 .buy-popup{background:#fff;padding:30px;border-radius:12px;width:320px;text-align:center;}
 .buy-popup h3{color:#990000;margin-bottom:15px;font-size:20px;}
 .pop-qr{width:200px;height:200px;margin:0 auto 15px;border:1px solid #eee;}
 .pop-tip-text{font-size:15px;color:#333;margin-bottom:22px;}
 .pop-close{padding:9px 26px;background:#990000;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;}
-/* 底部版权统计 */
-.footer{position:fixed;bottom:0;left:0;width:100%;background:#222;color:#ccc;text-align:center;padding:12px 0;font-size:13px;}
-.footer p{line-height:1.8;}
-/* 人生必备弹窗样式补充 */
-#modalMask{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    z-index:99999;
-    align-items:center;
-    justify-content:center;
-}
-.modal-box{
-    background:#fff;
-    width:320px;
-    border-radius:8px;
-    padding:20px;
-}
-.modal-box h3{
-    text-align:center;
-    margin-top:0;
-    color:#333;
-}
-#abilityList{
-    list-style:none;
-    padding:0;
-    margin:20px 0;
-}
-#abilityList li{
-    padding:12px 10px;
-    border-bottom:1px solid #eee;
-    cursor:pointer;
-    font-size:15px;
-}
-#abilityList li:last-child{
-    border-bottom:none;
-}
-#abilityList li:hover{
-    background:#f5f5f5;
-}
-#closeModal{
-    width:100%;
-    padding:8px;
-    background:#999;
-    color:#fff;
-    border:none;
-    border-radius:4px;
-    cursor:pointer;
-}
-#lifeBtn{
-    padding:12px 24px;
-    background:#2563eb;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    font-size:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.15);
-    z-index:999;
-    cursor:pointer;
-}
-#lifeBtn:hover{
-    background:#1d4ed8;
-}
+
+/* 4.2 人生必备弹窗 */
+#modalMask{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;}
+.modal-box{background:#fff;width:320px;border-radius:8px;padding:20px;}
+.modal-box h3{text-align:center;margin-top:0;color:#333;}
+#abilityList{list-style:none;padding:0;margin:20px 0;}
+#abilityList li{padding:12px 10px;border-bottom:1px solid #eee;cursor:pointer;font-size:15px;}
+#abilityList li:last-child{border-bottom:none;}
+#abilityList li:hover{background:#f5f5f5;}
+#closeModal{width:100%;padding:8px;background:#999;color:#fff;border:none;border-radius:4px;cursor:pointer;}
+#lifeBtn{position:fixed;right:80px;bottom:150px;padding:12px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:15px;box-shadow:0 2px 10px rgba(0,0,0,0.15);z-index:999;cursor:pointer;}
+#lifeBtn:hover{background:#1d4ed8;}
+
+/* 4.3 快乐人生五要素弹窗 */
+#happyMask{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:100000;align-items:center;justify-content:center;}
+.happy-popup{background:#fff;padding:30px 50px;border-radius:10px;text-align:center;}
+.happy-item{font-size:22px;margin:16px 0;}
+.happy-close{margin-top:20px;padding:6px 18px;cursor:pointer;background:#990000;color:#fff;border:none;border-radius:4px;}
+#happyBtn{position:fixed;right:36px;bottom:220px;padding:10px 20px;font-size:16px;cursor:pointer;background:#ff7875;color:#fff;border:none;border-radius:6px;z-index:999;}
+#happyBtn:hover{background:#ff4d4f;}
+
+/* ========== 5.底部悬浮功能按钮 ========== */
+/* 脚本之家按钮 */
 .super-btn {
   position: fixed;
-  right: 80px; /* 右下角往左偏移，数值越大越靠左 */
+  right: 80px;
   bottom: 80px;
   padding: 12px 24px;
   background: #2563eb;
@@ -174,83 +138,63 @@ body{background:#f8f3e8;padding-bottom:130px;}
   text-decoration: none;
   font-size: 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  z-index: 999;
+  z-index: 998;
 }
-.super-btn:hover {
-  background: #1d4ed8;
+.super-btn:hover {background: #1d4ed8;}
+/* 左侧简历下载按钮组 */
+.resume-btn-group {
+  position:fixed;
+  left:20px;
+  bottom:80px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:999;
 }
-/* 快乐人生五要素弹窗样式 */
-#happyMask {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 100000;
-    align-items: center;
-    justify-content: center;
-}
-.happy-popup {
-    background: #fff;
-    padding: 30px 50px;
-    border-radius: 10px;
-    text-align: center;
-}
-.happy-item {
-    font-size: 22px;
-    margin: 16px 0;
-}
-.happy-close {
-    margin-top: 20px;
-    padding: 6px 18px;
-    cursor: pointer;
-    background: #990000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-}
-#happyBtn {
-    position: fixed;
-    right: 36px;
-    bottom: 220px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background: #ff7875;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    z-index: 999;
-}
-#happyBtn:hover {
-    background: #ff4d4f;
+.resume-btn-group a {
+  padding:8px 16px;
+  background:#8b0000;
+  color:white;
+  border-radius:6px;
+  text-decoration:none;
+  text-align:center;
 }
 </style>
 </head>
 <body>
+<!-- 一、页面主体内容 -->
 <!-- 顶部头部 -->
 <div class="header">
     <h1 class="brand-title" id="pageTitle"></h1>
     <button class="share-btn" id="shareBtn">分享好友</button>
 </div>
-<!-- 右上角固定扫码下单 -->
+
+<!-- 右上角固定下单二维码 -->
 <div class="top-qr-box">
     <img id="topQrImg" alt="下单二维码">
     <p>扫码立即下单</p>
 </div>
-<!-- 游走悬浮客服二维码 -->
+
+<!-- 游走浮动客服二维码 -->
 <div class="float-qr" id="floatQrBox">
     <img id="floatQrImg" alt="客服咨询二维码">
     <span>扫码咨询客服</span>
 </div>
-<!-- 商品列表容器 -->
+
+<!-- 商品展示区域 -->
 <div class="container">
     <h2 class="goods-main-title">贵州迎宾酒系列产品</h2>
     <div class="goods-wrap" id="goodsContainer"></div>
 </div>
-<!-- 下单弹窗 -->
+
+<!-- 底部版权 -->
+<div class="footer">
+    <p id="statLine"></p>
+    <p id="copyrightLine"></p>
+</div>
+
+<!-- 二、弹窗DOM容器（统一集中放置） -->
+<!-- 1.商品下单弹窗 -->
 <div class="mask" id="maskLayer">
     <div class="buy-popup">
         <h3 id="popTitleDom"></h3>
@@ -260,8 +204,8 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- ========== 人生必备按钮+弹窗 HTML ========== -->
-<button id="lifeBtn" style="position:fixed;right:80px;bottom:150px;">人生必备</button>
+<!-- 2.人生必备弹窗 -->
+<button id="lifeBtn">人生必备</button>
 <div id="modalMask">
     <div class="modal-box">
         <h3>人生必备能力列表</h3>
@@ -278,7 +222,7 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- 快乐人生五要素 按钮与弹窗 -->
+<!-- 3.快乐人生五要素弹窗 -->
 <button id="happyBtn">快乐人生五要素</button>
 <div id="happyMask">
     <div class="happy-popup">
@@ -291,15 +235,25 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- 底部统计版权 -->
-<div class="footer">
-    <p id="statLine"></p>
-    <p id="copyrightLine"></p>
+<!-- 三、页面底部悬浮功能按钮（统一归类） -->
+<!-- 左侧简历下载按钮组 -->
+<div class="resume-btn-group">
+    <a href="dba.pdf" target="_blank">DBA数据库管理员</a>
+    <a href="rjss.pdf" target="_blank">软件实施工程师</a>
+    <a href="rjyw.pdf" target="_blank">系统运维工程师</a>
+    <a href="it.pdf" target="_blank">IT技术支持</a>
+    <a href="idc.pdf" target="_blank">IDC机房运维工程师</a>
+    <a href="rdjs.pdf" target="_blank">弱电实施技术员</a>
 </div>
+<!-- 脚本之家跳转按钮 -->
+<a href="jbzj.html" target="_blank" class="super-btn">脚本之家</a>
+
+<!-- 四、交互脚本（按业务顺序分段，逻辑从上到下） -->
 <script>
 const cfg = CONFIG;
 let timerInstance = null;
-// 页面静态渲染赋值
+
+// 1.页面基础静态赋值
 document.getElementById("pageTitle").innerText = cfg.siteName;
 document.getElementById("topQrImg").src = cfg.qrTopRight;
 document.getElementById("floatQrImg").src = cfg.qrFloatService;
@@ -309,12 +263,12 @@ document.getElementById("popTipDom").innerText = cfg.popupHint;
 document.getElementById("popCloseBtn").innerText = cfg.popupCloseText;
 document.getElementById("statLine").innerText = `网站访问统计：今日访问 ${cfg.statToday} 次 | 总访问 ${cfg.statTotal} 次`;
 document.getElementById("copyrightLine").innerText = `©${cfg.copyrightYear} ${cfg.copyrightDesc}`;
-// 自动循环渲染商品
+
+// 2.商品列表自动渲染
 const goodsBox = document.getElementById("goodsContainer");
 cfg.goods.forEach(item => {
     let card = document.createElement("div");
     card.className = "goods-card";
-    // 图片加载失败自动提示文字
     card.innerHTML = `
         <div class="goods-img-area">
             <img src="./${item.imgSrc}" alt="${item.name}" onerror="this.parentElement.innerText='图片未找到，请核对图片文件名'">
@@ -328,18 +282,19 @@ cfg.goods.forEach(item => {
     `;
     goodsBox.appendChild(card);
 });
-// 分享复制链接
+
+// 3.分享复制链接功能
 const shareBtn = document.getElementById("shareBtn");
 shareBtn.onclick = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
         alert(cfg.shareCopyTip);
     });
 };
-// 弹窗逻辑：打开弹窗倒计时，无倒计时文字，15秒自动打开微信
+
+// 4.商品下单弹窗+自动跳转微信逻辑
 const mask = document.getElementById("maskLayer");
 const closeBtn = document.getElementById("popCloseBtn");
 const allBuyBtns = document.querySelectorAll(".buy-btn");
-// 打开下单弹窗
 function openBuyPopup(){
     mask.style.display = "flex";
     clearInterval(timerInstance);
@@ -352,16 +307,15 @@ function openBuyPopup(){
         }
     },1000);
 }
-// 关闭弹窗，清除计时并重置
 function closeBuyPopup(){
     mask.style.display = "none";
     clearInterval(timerInstance);
 }
-// 绑定所有购买按钮弹窗
 allBuyBtns.forEach(btn=> btn.onclick = openBuyPopup);
 closeBtn.onclick = closeBuyPopup;
 mask.onclick = e => {if(e.target === mask) closeBuyPopup();};
-// 全屏游走二维码动画
+
+// 5.游走二维码动画
 const floatBox = document.getElementById("floatQrBox");
 let x = 40, y = 100;
 let speedX = 2, speedY = 1.6;
@@ -380,63 +334,25 @@ function moveFloatQr(){
 }
 moveFloatQr();
 
-// ========== 人生必备弹窗JS逻辑（已修改为新窗口打开） ==========
+// 6.人生必备弹窗交互
 const openBtn = document.getElementById('lifeBtn');
 const modalMask = document.getElementById('modalMask');
 const closeModalBtn = document.getElementById('closeModal');
 const listItems = document.querySelectorAll('#abilityList li');
-
-// 打开弹窗
-openBtn.onclick = () => {
-    modalMask.style.display = 'flex';
-}
-// 关闭弹窗
-closeModalBtn.onclick = () => {
-    modalMask.style.display = 'none';
-}
-// 点击遮罩空白关闭弹窗
-modalMask.onclick = (e) => {
-    if(e.target === modalMask) modalMask.style.display = 'none';
-}
-// 点击列表项【新标签页打开文章】
+openBtn.onclick = () => modalMask.style.display = 'flex';
+closeModalBtn.onclick = () => modalMask.style.display = 'none';
+modalMask.onclick = (e) => {if(e.target === modalMask) modalMask.style.display = 'none';};
 listItems.forEach(item => {
-    item.onclick = () => {
-        const link = item.dataset.url;
-        window.open(link, '_blank');
-    }
+    item.onclick = () => window.open(item.dataset.url, '_blank');
 })
 
-// 快乐人生五要素弹窗交互
+// 7.快乐人生五要素弹窗交互
 const happyBtn = document.getElementById('happyBtn');
 const happyMask = document.getElementById('happyMask');
 const happyCloseBtn = document.getElementById('happyCloseBtn');
-happyBtn.onclick = () => {
-    happyMask.style.display = 'flex';
-}
-happyCloseBtn.onclick = () => {
-    happyMask.style.display = 'none';
-}
-happyMask.onclick = e => {
-    if(e.target === happyMask) happyMask.style.display = 'none';
-}
+happyBtn.onclick = () => happyMask.style.display = 'flex';
+happyCloseBtn.onclick = () => happyMask.style.display = 'none';
+happyMask.onclick = e => {if(e.target === happyMask) happyMask.style.display = 'none';}
 </script>
-<!-- 底部左侧竖排简历按钮区域 -->
-<div style="position:fixed; left:20px; bottom:80px; display:flex; flex-direction:column; gap:12px; z-index:999;">
-    <!-- 按钮1 -->
-    <a href="dba.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">DBA数据库管理员</a>
-    <!-- 按钮2 -->
-    <a href="rjss.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">软件实施工程师</a>
-    <!-- 按钮3 -->
-    <a href="rjyw.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">系统运维工程师</a>
-	<!-- 按钮4 -->
-    <a href="it.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">IT技术支持</a>
-    <!-- 按钮5 -->
-    <a href="idc.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">IDC机房运维工程师</a>
-	<!-- 按钮6 -->
-    <a href="rdjs.pdf" target="_blank" style="padding:8px 16px;background:#8b0000;color:white;border-radius:6px;text-decoration:none;text-align:center;">弱电实施技术员</a>
-</div>
-
-<!-- target="_blank 新窗口打开 -->
-<a href="jbzj.html" target="_blank" class="super-btn">脚本之家</a>
 </body>
 </html>
