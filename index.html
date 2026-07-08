@@ -60,15 +60,30 @@ const CONFIG = {
 <style>
 /* ========== 1.全局基础样式 ========== */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",SimHei,sans-serif;}
-body{background:#f8f3e8;padding-bottom:130px;}
+body{
+    background:#f8f3e8;
+    padding-top:88px;
+    padding-bottom:0;
+    min-height:100vh;
+}
 
-/* ========== 2.页面主体布局：头部、商品、底部 ========== */
-/* 顶部导航栏 */
-.header{background:#990000;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+/* ========== 2.页面主体布局 ========== */
+.header{
+    background:#990000;
+    color:#fff;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:999;
+}
 .brand-title{font-size:26px;font-weight:bold;letter-spacing:2px;}
 .share-btn{background:#ffb800;border:none;padding:8px 16px;border-radius:6px;color:#000;font-weight:bold;cursor:pointer;}
 
-/* 商品展示区域 */
 .container{max-width:1000px;margin:40px auto;padding:0 20px;}
 .goods-main-title{text-align:center;font-size:22px;color:#990000;margin-bottom:30px;border-bottom:2px solid #d4af37;padding-bottom:10px;}
 .goods-wrap{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
@@ -82,22 +97,46 @@ body{background:#f8f3e8;padding-bottom:130px;}
 .buy-btn{width:100%;background:#990000;color:#fff;border:none;padding:10px;border-radius:6px;font-size:16px;cursor:pointer;}
 .buy-btn:hover{background:#b30000;}
 
-/* 底部版权栏 */
-.footer{position:fixed;bottom:0;left:0;width:100%;background:#222;color:#ccc;text-align:center;padding:12px 0;font-size:13px;}
-.footer p{line-height:1.8;}
+.footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#222;
+    color:#ccc;
+    padding:12px 20px;
+    font-size:13px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    z-index:998;
+}
+.footer p{line-height:1.8;text-align:center;}
+.footer-link-btn{
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    padding:6px 14px;
+    background:#0066ff;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:13px;
+}
+.footer-link-btn:hover{background:#0052cc;}
 
 /* ========== 3.固定悬浮二维码组件 ========== */
-/* 右上角固定下单二维码 */
-.top-qr-box{position:fixed;top:80px;right:20px;background:#fff;border:2px solid #990000;padding:12px;border-radius:8px;width:140px;text-align:center;z-index:99;}
+.top-qr-box{position:fixed;top:96px;right:20px;background:#fff;border:2px solid #990000;padding:12px;border-radius:8px;width:140px;text-align:center;z-index:99;}
 .top-qr-box img{width:110px;height:110px;border:1px solid #ddd;}
 .top-qr-box p{margin-top:8px;font-size:14px;color:#990000;font-weight:bold;}
-/* 游走浮动客服二维码 */
 .float-qr{position:fixed;width:120px;height:145px;background:#fff;border:2px solid #d4af37;padding:8px;border-radius:8px;text-align:center;z-index:98;}
 .float-qr img{width:100px;height:100px;}
 .float-qr span{font-size:12px;color:#990000;}
 
-/* ========== 4.弹窗模块样式（按业务分组） ========== */
-/* 4.1 下单扫码弹窗 */
+/* ========== 4.弹窗模块样式 ========== */
 .mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;z-index:9999;align-items:center;justify-content:center;}
 .buy-popup{background:#fff;padding:30px;border-radius:12px;width:320px;text-align:center;}
 .buy-popup h3{color:#990000;margin-bottom:15px;font-size:20px;}
@@ -105,7 +144,6 @@ body{background:#f8f3e8;padding-bottom:130px;}
 .pop-tip-text{font-size:15px;color:#333;margin-bottom:22px;}
 .pop-close{padding:9px 26px;background:#990000;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;}
 
-/* 4.2 人生必备弹窗 */
 #modalMask{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;}
 .modal-box{background:#fff;width:320px;border-radius:8px;padding:20px;}
 .modal-box h3{text-align:center;margin-top:0;color:#333;}
@@ -117,16 +155,93 @@ body{background:#f8f3e8;padding-bottom:130px;}
 #lifeBtn{position:fixed;right:50px;bottom:150px;padding:12px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:15px;box-shadow:0 2px 10px rgba(0,0,0,0.15);z-index:999;cursor:pointer;}
 #lifeBtn:hover{background:#1d4ed8;}
 
-/* 4.3 快乐人生五要素弹窗 */
 #happyMask{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:100000;align-items:center;justify-content:center;}
 .happy-popup{background:#fff;padding:30px 50px;border-radius:10px;text-align:center;}
 .happy-item{font-size:22px;margin:16px 0;}
 .happy-close{margin-top:20px;padding:6px 18px;cursor:pointer;background:#990000;color:#fff;border:none;border-radius:4px;}
-#happyBtn{position:fixed;right:6px;bottom:220px;padding:10px 20px;font-size:16px;cursor:pointer;background:#ff7875;color:#fff;border:none;border-radius:6px;z-index:999;}
+#happyBtn{position:fixed;right:50px;bottom:220px;padding:10px 20px;font-size:16px;cursor:pointer;background:#ff7875;color:#fff;border:none;border-radius:6px;z-index:999;}
 #happyBtn:hover{background:#ff4d4f;}
 
+/* 4.4 友情链接弹窗样式 */
+.link-mask{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    z-index:100001;
+    align-items:center;
+    justify-content:center;
+}
+.link-pop-box{
+    width:380px;
+    background:#fff;
+    border:3px solid #0066ff;
+    border-radius:8px;
+    padding:20px;
+    position:relative;
+}
+.link-pop-close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    font-size:20px;
+    cursor:pointer;
+    color:#666;
+}
+.link-list{margin:15px 0;max-height:220px;overflow-y:auto;border:1px solid #eee;padding:10px;}
+.link-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 0;
+    font-size:15px;
+    border-bottom:1px solid #eee;
+}
+.link-item:last-child{border-bottom:none;}
+.link-text{
+    color:#0066ff;
+    cursor:pointer;
+}
+.link-text:hover{
+    color:#003399;
+    text-decoration:underline;
+}
+/* 新增输入区域样式 */
+.link-input-area{
+    margin:12px 0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+.link-input-area label{
+    font-size:14px;color:#333;
+}
+.link-input-area input{
+    padding:7px 10px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    font-size:14px;
+}
+.link-operate{
+    display:flex;
+    gap:12px;
+    margin-top:15px;
+}
+.link-operate button{
+    flex:1;
+    padding:9px 0;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+}
+.link-add{background:#0066ff;color:#fff;}
+.link-del{background:#ff4444;color:#fff;}
+
 /* ========== 5.底部悬浮功能按钮 ========== */
-/* 脚本之家按钮 */
 .super-btn {
   position: fixed;
   right: 50px;
@@ -141,11 +256,10 @@ body{background:#f8f3e8;padding-bottom:130px;}
   z-index: 998;
 }
 .super-btn:hover {background: #1d4ed8;}
-/* 左侧简历下载按钮组 */
 .resume-btn-group {
   position:fixed;
   left:10px;
-  bottom:80px;
+  bottom:240px;
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -160,74 +274,56 @@ body{background:#f8f3e8;padding-bottom:130px;}
   text-align:center;
 }
 
-/* ========== 移动端自适应媒体查询（768px以下手机端） ========== */
+/* ========== 移动端自适应 ========== */
 @media screen and (max-width: 768px) {
-    /* 头部适配 */
     .header {padding:12px 15px;}
     .brand-title {font-size:20px;letter-spacing:1px;}
     .share-btn {padding:6px 12px;font-size:14px;}
-
-    /* 商品区域：手机单列展示 */
+    body{padding-top:72px;}
     .container {margin:25px auto;padding:0 15px;}
     .goods-main-title {font-size:18px;margin-bottom:20px;}
-    .goods-wrap {
-        grid-template-columns: 1fr !important; /* 手机1列 */
-        gap:20px;
-    }
+    .goods-wrap {grid-template-columns: 1fr !important;gap:20px;}
     .goods-img-area {height:200px;}
     .goods-name {font-size:16px;}
     .goods-price {font-size:18px;}
-
-    /* 右上角二维码缩小+移位，不遮挡标题 */
-    .top-qr-box {
-        width:100px;
-        padding:8px;
-        right:10px;
-        top:70px;
-    }
+    .top-qr-box {width:100px;padding:8px;right:10px;top:80px;}
     .top-qr-box img {width:75px;height:75px;}
     .top-qr-box p {font-size:12px;}
-
-    /* 弹窗宽度铺满手机，左右留边 */
     .buy-popup {width:calc(100% - 30px);padding:20px;}
     .modal-box {width:calc(100% - 30px);}
     .happy-popup {width:calc(100% - 30px);padding:20px;}
+    .link-pop-box{width:calc(100% - 30px);}
     .pop-qr {width:160px;height:160px;}
-
-    /* 右侧悬浮按钮缩小、调整底部距离 */
-    #lifeBtn {right:10px;bottom:130px;padding:10px 16px;font-size:14px;}
-    #happyBtn {right:6px;bottom:190px;padding:8px 14px;font-size:14px;}
-    .super-btn {right:10px;bottom:70px;padding:10px 16px;font-size:14px;}
-
-    /* 左侧简历按钮缩小 */
+    #lifeBtn {right:10px;bottom:180px;padding:10px 16px;font-size:14px;}
+    #happyBtn {right:6px;bottom:240px;padding:8px 14px;font-size:14px;}
+    .super-btn {right:10px;bottom:120px;padding:10px 16px;font-size:14px;}
     .resume-btn-group a {padding:6px 10px;font-size:13px;}
-
-    /* 底部版权文字缩小 */
-    .footer {font-size:12px;padding:10px 0;}
+    .resume-btn-group {bottom:120px;}
+    .footer {font-size:12px;padding:10px 12px;}
+    .footer-link-btn{padding:5px 10px;font-size:12px;left:12px;}
 }
 </style>
 </head>
 <body>
-<!-- 一、页面主体内容 -->
 <!-- 顶部头部 -->
 <div class="header">
     <h1 class="brand-title" id="pageTitle"></h1>
     <button class="share-btn" id="shareBtn">分享好友</button>
 </div>
 
-<!-- 右上角固定下单二维码 -->
+<!-- 右上角二维码 -->
 <div class="top-qr-box">
     <img id="topQrImg" alt="下单二维码">
     <p>扫码立即下单</p>
 </div>
 
-<!-- 游走浮动客服二维码 -->
+<!-- 浮动二维码 -->
 <div class="float-qr" id="floatQrBox">
     <img id="floatQrImg" alt="客服咨询二维码">
     <span>扫码咨询客服</span>
 </div>
 
-<!-- 商品展示区域 -->
+<!-- 商品区域 -->
 <div class="container">
     <h2 class="goods-main-title">贵州迎宾酒系列产品</h2>
     <div class="goods-wrap" id="goodsContainer"></div>
@@ -235,12 +331,14 @@ body{background:#f8f3e8;padding-bottom:130px;}
 
 <!-- 底部版权 -->
 <div class="footer">
-    <p id="statLine"></p>
-    <p id="copyrightLine"></p>
+    <button class="footer-link-btn" id="openLinkPop">友情链接</button>
+    <div class="footer-center-text">
+        <p id="statLine"></p>
+        <p id="copyrightLine"></p>
+    </div>
 </div>
 
-<!-- 二、弹窗DOM容器（统一集中放置） -->
-<!-- 1.商品下单弹窗 -->
+<!-- 弹窗容器 -->
 <div class="mask" id="maskLayer">
     <div class="buy-popup">
         <h3 id="popTitleDom"></h3>
@@ -250,7 +348,6 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- 2.人生必备弹窗 -->
 <button id="lifeBtn">人生必备</button>
 <div id="modalMask">
     <div class="modal-box">
@@ -268,8 +365,7 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- 3.快乐人生五要素弹窗 -->
-<button id="happyBtn">快乐人生五要素</button>
+<button id="happyBtn">快乐人生</button>
 <div id="happyMask">
     <div class="happy-popup">
         <div class="happy-item">钱💰</div>
@@ -281,8 +377,39 @@ body{background:#f8f3e8;padding-bottom:130px;}
     </div>
 </div>
 
-<!-- 三、页面底部悬浮功能按钮（统一归类） -->
-<!-- 左侧简历下载按钮组 -->
+<!-- 友情链接弹窗（新增内置输入框） -->
+<div class="link-mask" id="linkMask">
+    <div class="link-pop-box">
+        <span class="link-pop-close" id="closeLinkPop">×</span>
+        <h3>文档链接</h3>
+
+        <!-- 内置表单输入区，无需弹窗 -->
+        <div class="link-input-area">
+            <label>文档显示名称</label>
+            <input type="text" id="inputDocName" placeholder="例：软件开发教程">
+            <label>PDF文件名称</label>
+            <input type="text" id="inputPdfName" placeholder="例：software.pdf">
+        </div>
+
+        <div class="link-list" id="linkListWrap">
+            <div class="link-item">
+                <input type="checkbox" class="item-check">
+                <span class="link-text" data-pdf="酱香酒知识.pdf">酱香酒知识</span>
+            </div>
+            <div class="link-item">
+                <input type="checkbox" class="item-check">
+                <span class="link-text" data-pdf="软件开发.pdf">软件开发</span>
+            </div>
+        </div>
+
+        <div class="link-operate">
+            <button class="link-add" id="addLinkItem">添加</button>
+            <button class="link-del" id="delLinkItem">批量删除</button>
+        </div>
+    </div>
+</div>
+
+<!-- 悬浮按钮 -->
 <div class="resume-btn-group">
     <a href="dba.pdf" target="_blank">DBA数据库管理员</a>
     <a href="rjss.pdf" target="_blank">软件实施工程师</a>
@@ -291,15 +418,13 @@ body{background:#f8f3e8;padding-bottom:130px;}
     <a href="idc.pdf" target="_blank">IDC机房运维工程师</a>
     <a href="rdjs.pdf" target="_blank">弱电实施技术员</a>
 </div>
-<!-- 脚本之家跳转按钮 -->
 <a href="jbzj.html" target="_blank" class="super-btn">脚本之家</a>
 
-<!-- 四、交互脚本（按业务顺序分段，逻辑从上到下） -->
 <script>
 const cfg = CONFIG;
 let timerInstance = null;
 
-// 1.页面基础静态赋值
+// 基础赋值
 document.getElementById("pageTitle").innerText = cfg.siteName;
 document.getElementById("topQrImg").src = cfg.qrTopRight;
 document.getElementById("floatQrImg").src = cfg.qrFloatService;
@@ -310,7 +435,7 @@ document.getElementById("popCloseBtn").innerText = cfg.popupCloseText;
 document.getElementById("statLine").innerText = `网站访问统计：今日访问 ${cfg.statToday} 次 | 总访问 ${cfg.statTotal} 次`;
 document.getElementById("copyrightLine").innerText = `©${cfg.copyrightYear} ${cfg.copyrightDesc}`;
 
-// 2.商品列表自动渲染
+// 渲染商品
 const goodsBox = document.getElementById("goodsContainer");
 cfg.goods.forEach(item => {
     let card = document.createElement("div");
@@ -329,7 +454,7 @@ cfg.goods.forEach(item => {
     goodsBox.appendChild(card);
 });
 
-// 3.分享复制链接功能
+// 分享复制
 const shareBtn = document.getElementById("shareBtn");
 shareBtn.onclick = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -337,7 +462,7 @@ shareBtn.onclick = () => {
     });
 };
 
-// 4.商品下单弹窗+自动跳转微信逻辑
+// 下单弹窗逻辑
 const mask = document.getElementById("maskLayer");
 const closeBtn = document.getElementById("popCloseBtn");
 const allBuyBtns = document.querySelectorAll(".buy-btn");
@@ -361,7 +486,7 @@ allBuyBtns.forEach(btn=> btn.onclick = openBuyPopup);
 closeBtn.onclick = closeBuyPopup;
 mask.onclick = e => {if(e.target === mask) closeBuyPopup();};
 
-// 5.游走二维码动画
+// 浮动二维码动画
 const floatBox = document.getElementById("floatQrBox");
 let x = 40, y = 100;
 let speedX = 2, speedY = 1.6;
@@ -380,7 +505,7 @@ function moveFloatQr(){
 }
 moveFloatQr();
 
-// 6.人生必备弹窗交互
+// 人生弹窗
 const openBtn = document.getElementById('lifeBtn');
 const modalMask = document.getElementById('modalMask');
 const closeModalBtn = document.getElementById('closeModal');
@@ -392,13 +517,89 @@ listItems.forEach(item => {
     item.onclick = () => window.open(item.dataset.url, '_blank');
 })
 
-// 7.快乐人生五要素弹窗交互
+// 快乐弹窗
 const happyBtn = document.getElementById('happyBtn');
 const happyMask = document.getElementById('happyMask');
 const happyCloseBtn = document.getElementById('happyCloseBtn');
 happyBtn.onclick = () => happyMask.style.display = 'flex';
 happyCloseBtn.onclick = () => happyMask.style.display = 'none';
 happyMask.onclick = e => {if(e.target === happyMask) happyMask.style.display = 'none';}
+
+// ====================== 友情链接逻辑（已替换内置输入框，无prompt） ======================
+const openLinkPop = document.getElementById('openLinkPop');
+const linkMask = document.getElementById('linkMask');
+const closeLinkPop = document.getElementById('closeLinkPop');
+const linkListWrap = document.getElementById('linkListWrap');
+const addLinkItem = document.getElementById('addLinkItem');
+const delLinkItem = document.getElementById('delLinkItem');
+const inputDocName = document.getElementById('inputDocName');
+const inputPdfName = document.getElementById('inputPdfName');
+
+// 打开/关闭弹窗
+openLinkPop.onclick = () => linkMask.style.display = 'flex';
+closeLinkPop.onclick = () => {
+    linkMask.style.display = 'none';
+    // 关闭时清空输入框
+    inputDocName.value = '';
+    inputPdfName.value = '';
+};
+linkMask.onclick = (e) => {
+    if(e.target === linkMask) {
+        linkMask.style.display = 'none';
+        inputDocName.value = '';
+        inputPdfName.value = '';
+    }
+}
+
+// 绑定链接点击跳转PDF
+function bindPdfClick(){
+    const allText = linkListWrap.querySelectorAll('.link-text');
+    allText.forEach(text=>{
+        text.onclick = ()=>{
+            const pdfPath = text.dataset.pdf;
+            window.open(pdfPath, '_blank');
+        }
+    })
+}
+bindPdfClick();
+
+// 添加按钮逻辑：读取弹窗内两个输入框，一次提交
+addLinkItem.onclick = ()=>{
+    const docName = inputDocName.value.trim();
+    const pdfFile = inputPdfName.value.trim();
+    if(!docName || !pdfFile){
+        alert('文档名称和PDF文件名不能为空！');
+        return;
+    }
+    // 创建条目
+    const newItem = document.createElement('div');
+    newItem.className = 'link-item';
+    newItem.innerHTML = `
+        <input type="checkbox" class="item-check">
+        <span class="link-text" data-pdf="${pdfFile}">${docName}</span>
+    `;
+    linkListWrap.appendChild(newItem);
+    bindPdfClick();
+    // 添加完成清空输入框
+    inputDocName.value = '';
+    inputPdfName.value = '';
+}
+
+// 批量删除
+delLinkItem.onclick = ()=>{
+    const allItems = linkListWrap.querySelectorAll('.link-item');
+    const checkedItems = Array.from(allItems).filter(item=>{
+        return item.querySelector('.item-check').checked;
+    });
+    if(checkedItems.length === 0){
+        alert('请先勾选需要删除的文档链接！');
+        return;
+    }
+    const isDelete = confirm(`确认删除选中的 ${checkedItems.length} 条文档链接？`);
+    if(isDelete){
+        checkedItems.forEach(item => item.remove());
+    }
+}
 </script>
 </body>
 </html>
