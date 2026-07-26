@@ -284,11 +284,28 @@ a{
     .goods-name {font-size:18px;}
     .goods-price {font-size:20px;}
     .top-qr-box {width:120px;padding:12px;right:12px;top:86px;}
-    .top-qr-box img {width:95px;height:95px;}
+    .top-qr-box img {width:95px;height:95px;object-fit:contain;}
     .top-qr-box p {font-size:13px;}
-    .buy-popup {width:calc(100% - 36px);padding:26px;}
-    .pop-qr {width:180px;height:180px;}
+
+    /* 修复弹窗全屏拉长问题 */
+    .buy-popup {
+        width:calc(100% - 36px);
+        padding:26px;
+        max-height: 80vh; /* 限制弹窗最大高度 */
+        overflow-y: auto;  /* 内容过多内部滚动 */
+        box-sizing: border-box;
+        /* 居中定位，取消上下0铺满 */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .pop-qr {
+        width:180px;
+        height:180px;
+        object-fit: contain; /* 二维码不变形 */
+    }
 }
+
 </style>
 </head>
 <body>
