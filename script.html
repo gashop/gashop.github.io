@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>脚本之家-便捷选购系统</title>
+    <script>
+        const CONFIG = {
+            siteName: "脚本超市·便捷选购",
+            qrTextBottomWechat: "添加微信，领取福利",
+            qrTextBottomSite: "长按或双击二维码保存",
+            tipHoverBasic: "基础版本，简单好用，满足日常使用",
+            tipClickAdvanced: "功能更丰富，上手简单好操作",
+            tipClickPremium: "全自动运行，省心又省力",
+            productList: [
+                [
+                    { name: "基础款", desc: "基础实用功能，日常使用完全足够", price: "¥99", link: "https://链接地址",img: "g1_basic.png", imgText: "产品展示图" },
+                    { name: "进阶款", desc: "功能全面升级，多种场景都能用", price: "¥299", link: "https://链接地址",img: "g1_advanced.png", imgText: "产品展示图" },
+                    { name: "尊享款", desc: "全部功能开放，专属一对一售后", price: "¥599", link: "https://链接地址",img: "g1_premium.png", imgText: "产品展示图" }
+                ],
+                [
+                   { name: "基础款", desc: "基础实用功能，日常使用完全足够", price: "¥99", link: "https://链接地址",img: "g1_basic.png", imgText: "产品展示图" },
+                    { name: "进阶款", desc: "功能全面升级，多种场景都能用", price: "¥299", link: "https://链接地址",img: "g1_advanced.png", imgText: "产品展示图" },
+                    { name: "尊享款", desc: "全部功能开放，专属一对一售后", price: "¥599", link: "https://链接地址",img: "g1_premium.png", imgText: "产品展示图" }
+                ],
+                [
+                    { name: "基础款", desc: "基础实用功能，日常使用完全足够", price: "¥99", link: "https://链接地址",img: "g1_basic.png", imgText: "产品展示图" },
+                    { name: "进阶款", desc: "功能全面升级，多种场景都能用", price: "¥299", link: "https://链接地址",img: "g1_advanced.png", imgText: "产品展示图" },
+                    { name: "尊享款", desc: "全部功能开放，专属一对一售后", price: "¥599", link: "https://链接地址",img: "g1_premium.png", imgText: "产品展示图" }
+                ],
+                [
+                   { name: "基础款", desc: "基础实用功能，日常使用完全足够", price: "¥99", link: "https://链接地址",img: "g1_basic.png", imgText: "产品展示图" },
+                    { name: "进阶款", desc: "功能全面升级，多种场景都能用", price: "¥299", link: "https://链接地址",img: "g1_advanced.png", imgText: "产品展示图" },
+                    { name: "尊享款", desc: "全部功能开放，专属一对一售后", price: "¥599", link: "https://链接地址",img: "g1_premium.png", imgText: "产品展示图" }
+                ],
+                [
+                    { name: "基础款", desc: "基础实用功能，日常使用完全足够", price: "¥99", link: "https://链接地址",img: "g1_basic.png", imgText: "产品展示图" },
+                    { name: "进阶款", desc: "功能全面升级，多种场景都能用", price: "¥299", link: "https://链接地址",img: "g1_advanced.png", imgText: "产品展示图" },
+                    { name: "尊享款", desc: "全部功能开放，专属一对一售后", price: "¥599", link: "https://链接地址",img: "g1_premium.png", imgText: "产品展示图" }
+                ]
+            ]
+        };
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: yellow;
+            padding: 0.2rem 0.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+        }
+        .qr-code {
+            width: 70px;
+            height: 70px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+        .series-wrap {
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .series-title {
+            height: 4px;
+            width: 80px;
+            background: #3498db;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .basic { border-color: #bdc3c7; }
+        .advanced { border-color: #3498db; }
+        .premium { border-color: #f39c12; }
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 1.2rem;
+        }
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            color: #2c3e50;
+        }
+        .product-desc {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .product-price {
+            font-size: 1.4rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .buy-btn {
+            display: block;
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .buy-btn:hover {
+            background-color: #2980b9;
+        }
+        .tip-box {
+            position: absolute;
+            background: #333;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 99;
+            display: none;
+            pointer-events: none;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0.3rem 1rem;
+        }
+        .qr-bottom-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+        .qr-module-bottom {
+            background: rgba(255,255,255,0.1);
+            padding: 0.4rem;
+            border-radius: 8px;
+            min-width: 130px;
+        }
+        .qr-module-bottom p {
+            margin-bottom: 0.2rem;
+            font-size: 0.8rem;
+        }
+        .qr-module-bottom .qr-code {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto;
+        }
+        .qr-site .qr-code img {
+            cursor: pointer;
+        }
+        .download-tip {
+            position: fixed;
+            left: 50%;
+            bottom: 80px;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: none;
+            z-index: 9999;
+        }
+        .wechat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            position: relative;
+            width: 260px;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: #3498db;
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+        .modal-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .modal-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .close-modal {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+                padding: 0.5rem 1rem;
+            }
+            .logo {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            .qr-bottom-wrap {
+                gap: 0.8rem;
+            }
+        }
+	.back-home {
+    margin-left: 12px;  /* 向右移动，数值越大越靠右 */
+    margin-top: 8px;    /* 向下移动，数值越大越靠下 */
+    }	
+    </style>
+</head>
+<body>
+    <div class="download-tip" id="downloadTip">二维码已保存</div>
+    <div class="wechat-modal" id="wechatModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div class="modal-header">微信客服下单</div>
+            <div class="modal-body">
+                <div class="modal-qr">
+                    <img src="wechat.png" alt="微信客服二维码">
+                </div>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="logo"></div>
+    </header>
+	<div class="back-home">
+        <a href="index.html">首页</a>
+    </div>
+    <div class="container">
+        <div id="productContainer"></div>
+    </div>
+    <footer>
+        <div class="qr-bottom-wrap">
+            <div class="qr-module-bottom qr-wechat">
+                <p></p>
+                <div class="qr-code">
+                    <img src="wechat.png" alt="微信二维码">
+                </div>
+            </div>
+            <div class="qr-module-bottom qr-site">
+                <p></p>
+                <div class="qr-code">
+                    <img id="siteQrcode" src="qrcode.png" alt="本站二维码">
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const WECHAT_URL = "weixin://dl/chat?wxid_x3wygpbtthl222_54be";
+        let autoJumpTimer = null;
+        function closeModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = 'none';
+            if(autoJumpTimer){
+                clearTimeout(autoJumpTimer);
+                autoJumpTimer = null;
+            }
+        }
+        function goToWeChat(goodsName) {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = 'flex';
+            if(autoJumpTimer){
+                clearTimeout(autoJumpTimer);
+            }
+            autoJumpTimer = setTimeout(function(){
+                window.location.href = WECHAT_URL;
+                closeModal();
+            }, 15000);
+        }
+        document.querySelector('.logo').innerText = CONFIG.siteName;
+        document.querySelector('.qr-wechat p').innerText = CONFIG.qrTextBottomWechat;
+        document.querySelector('.qr-site p').innerText = CONFIG.qrTextBottomSite;
+        const container = document.getElementById('productContainer');
+        CONFIG.productList.forEach(group => {
+            const wrap = document.createElement('div');
+            wrap.className = 'series-wrap';
+            wrap.innerHTML = '<h2 class="series-title"></h2><div class="product-grid"></div>';
+            const grid = wrap.querySelector('.product-grid');
+            group.forEach((item, idx) => {
+                let cardClass = '';
+                let dataTip = '';
+                if (idx === 0) {
+                    cardClass = 'product-card basic';
+                    dataTip = `data-tip-hover="${CONFIG.tipHoverBasic}"`;
+                } else if (idx === 1) {
+                    cardClass = 'product-card advanced';
+                    dataTip = `data-tip-click="${CONFIG.tipClickAdvanced}"`;
+                } else {
+                    cardClass = 'product-card premium';
+                    dataTip = `data-tip-click="${CONFIG.tipClickPremium}"`;
+                }
+                const card = document.createElement('div');
+                card.className = cardClass;
+                const tipKey = dataTip.split('=')[0];
+                const tipVal = dataTip.split('=')[1].replace(/"/g, '');
+                card.setAttribute(tipKey, tipVal);
+                card.innerHTML = `
+                    <div class="tip-box"></div>
+                    <div class="product-image">
+                        <img src="${item.img}" alt="${item.imgText}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${item.name}</h3>
+                        <p class="product-desc">${item.desc}</p>
+                        <div class="product-price">${item.price}</div>
+                        <a href="javascript:;" onclick="goToWeChat('${item.name}')" class="buy-btn">立即购买</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            container.appendChild(wrap);
+        });
+        const hoverCards = document.querySelectorAll('.product-card.basic');
+        hoverCards.forEach(card => {
+            const tip = card.querySelector('.tip-box');
+            const text = card.dataset.tipHover;
+            card.addEventListener('mousemove', e => {
+                tip.innerText = text;
+                tip.style.display = 'block';
+                tip.style.left = (e.offsetX + 10) + 'px';
+                tip.style.top = (e.offsetY + 10) + 'px';
+            });
+            card.addEventListener('mouseleave', () => {
+                tip.style.display = 'none';
+            });
+        });
+        const clickCards = document.querySelectorAll('.product-card.advanced, .product-card.premium');
+        clickCards.forEach(card => {
+            const tip = card.querySelector('.tip-box');
+            const text = card.dataset.tipClick;
+            card.addEventListener('click', e => {
+                tip.innerText = text;
+                tip.style.display = 'block';
+                tip.style.left = (e.offsetX + 10) + 'px';
+                tip.style.top = (e.offsetY + 10) + 'px';
+                setTimeout(() => tip.style.display = 'none', 2000);
+            });
+        });
+        const siteQrcode = document.getElementById('siteQrcode');
+        const downloadTip = document.getElementById('downloadTip');
+        siteQrcode.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const imgSrc = this.src;
+            const tempImg = new Image();
+            tempImg.src = imgSrc;
+            tempImg.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = tempImg.width;
+                canvas.height = tempImg.height;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(tempImg, 0, 0);
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        downloadTip.innerText = "保存失败，请长按图片";
+                        downloadTip.style.display = 'block';
+                        setTimeout(() => downloadTip.style.display = 'none', 2000);
+                        return;
+                    }
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "本站二维码.png";
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    downloadTip.innerText = "二维码已保存";
+                    downloadTip.style.display = 'block';
+                    setTimeout(() => downloadTip.style.display = 'none', 2000);
+                }, 'image/png');
+            };
+            tempImg.onerror = function() {
+                downloadTip.innerText = "请长按图片保存";
+                downloadTip.style.display = 'block';
+                setTimeout(() => downloadTip.style.display = 'none', 2000);
+            };
+        });
+    </script>
+</body>
+</html>

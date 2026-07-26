@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>茅台镇·酱香酒</title>
+<!-- 全局酒水配置参数 -->
+<script>
+// ========== 网站酒水全局配置（完整保留，无删减） ==========
+const CONFIG = {
+    // 网站基础信息
+    siteName: "茅台镇·酱香酒",
+    copyrightYear: "2026",
+    copyrightDesc: "茅台镇 · 迎宾酒集团-小马哥 版权所有 严禁盗用",
+    statToday: "12908",
+    statTotal: "838962",
+    // 下单弹窗自动跳转微信倒计时
+    waitSecond: 15,
+    wechatJumpUrl: "weixin://",
+    // 二维码图片路径
+    qrTopRight: "./qr_top.png",
+    qrPopupBuy: "./qr_pop.png",
+    // 下单弹窗文案
+    popupTitle: "扫码联系客服下单",
+    popupHint: "微信扫描(或者长按)二维码添加客服咨询",
+    popupCloseText: "关闭窗口",
+    // 商品数据列表【完整四款酒水，无删减】
+    goods: [
+        {
+            name: "贵州迎宾酒·经典迎宾53度",
+            desc: "纯粮坤沙工艺，酱香突出，入口绵柔，家用自饮、日常小聚优选，500ml单瓶。",
+            price: "¥198 /瓶",
+            imgSrc: "jingdian.jpg"
+        },
+        {
+            name: "贵州迎宾酒·贵宾尊享礼盒",
+            desc: "高端礼盒包装，三年大曲坤沙，送礼宴请贵客专用，500ml*2瓶装。",
+            price: "¥598 /盒",
+            imgSrc: "guibin.jpg"
+        },
+        {
+            name: "贵州迎宾酒·五年陈酿",
+            desc: "五年基酒勾调，空杯留香持久，商务聚餐、收藏送礼皆宜，500ml。",
+            price: "¥328 /瓶",
+            imgSrc: "chenliang.jpg"
+        },
+        {
+            name: "贵州迎宾酒·封坛纪念酒",
+            desc: "传统手工封坛，酒体醇厚甘甜，限量纪念款，适合宴席、收藏留念。",
+            price: "¥888 /坛",
+            imgSrc: "fengtan.jpg"
+        }
+    ]
+};
+// ==================================================
+</script>
+<style>
+/* ========== 1.全局基础样式 美化优化 ========== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",SimHei,sans-serif;}
+body{
+    background:#f8f3e8;
+    padding-top:88px;
+    min-height:100vh;
+    line-height:1.7;
+}
+a{
+    text-decoration: none;
+}
+
+/* ========== 2.页面头部 美化 ========== */
+.header{
+    background:#990000;
+    color:#fff;
+    padding:8px 5px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:999;
+    box-shadow: 0 2px 10px rgba(120,0,0,0.3);
+}
+.brand-title{
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+.back-home a{
+    background:#d4af37;
+    color:#800000;
+    padding:9px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:15px;
+    transition: all 0.25s ease;
+}
+.back-home a:hover{
+    background:#ffd766;
+}
+
+/* ========== 3.商品主容器 美化排版 ========== */
+.container{
+    max-width:1100px;
+    margin:60px auto;
+    padding:0 25px;
+}
+.goods-main-title{
+    text-align:center;
+    font-size:26px;
+    color:#990000;
+    margin-bottom:45px;
+    border-bottom:3px solid #d4af37;
+    padding-bottom:14px;
+    width: fit-content;
+    margin-left:auto;
+    margin-right:auto;
+}
+.goods-wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+}
+.goods-card{
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 16px rgba(180,150,100,0.18);
+    border:1px solid #e8ddc8;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.goods-card:hover{
+    transform: translateY(-6px);
+    box-shadow:0 8px 24px rgba(180,150,100,0.25);
+}
+.goods-img-area{
+    width:100%;
+    height:280px;
+    background:#f1ece0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#666;
+    font-size:14px;
+    overflow:hidden;
+}
+.goods-img-area img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition: scale 0.4s ease;
+}
+.goods-card:hover .goods-img-area img{
+    scale:1.05;
+}
+.goods-info{
+    padding:22px;
+}
+.goods-name{
+    font-size:20px;
+    color:#990000;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+.goods-desc{
+    font-size:15px;
+    color:#555;
+    line-height:1.75;
+    margin-bottom:16px;
+}
+.goods-price{
+    font-size:22px;
+    color:#c00;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.buy-btn{
+    width:100%;
+    background:#990000;
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+    transition: background 0.25s ease;
+}
+.buy-btn:hover{
+    background:#b30000;
+}
+
+/* ========== 4.右上角固定二维码 美化 ========== */
+.top-qr-box{
+    position:fixed;
+    bottom:20px;
+    left:5px;
+    background:#fff;
+    border:2px solid #990000;
+    padding:15px;
+    border-radius:12px;
+    width:160px;
+    text-align:center;
+    z-index:99;
+    box-shadow:0 3px 12px rgba(0,0,0,0.12);
+}
+.top-qr-box img{
+    width:120px;
+    height:120px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
+.top-qr-box p{
+    margin-top:10px;
+    font-size:15px;
+    color:#990000;
+    font-weight:bold;
+}
+
+/* ========== 5.下单弹窗样式 美化 ========== */
+.mask{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    display:none;
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+}
+.buy-popup{
+    background:#fff;
+    padding:35px;
+    border-radius:16px;
+    width:360px;
+    text-align:center;
+    box-shadow:0 6px 30px rgba(0,0,0,0.2);
+}
+.buy-popup h3{
+    color:#990000;
+    margin-bottom:18px;
+    font-size:22px;
+}
+.pop-qr{
+    width:220px;
+    height:220px;
+    margin:0 auto 18px;
+    border:1px solid #eee;
+    border-radius:8px;
+}
+.pop-tip-text{
+    font-size:16px;
+    color:#333;
+    margin-bottom:26px;
+    line-height:1.7;
+}
+.pop-close{
+    padding:11px 30px;
+    background:#990000;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    transition: background 0.25s ease;
+}
+.pop-close:hover{
+    background:#b30000;
+}
+
+/* ========== 移动端自适应 美化适配 ========== */
+@media screen and (max-width: 768px) {
+    .header {padding:14px 18px;}
+    .brand-title {font-size:22px;letter-spacing:2px;}
+    .back-home a{padding:7px 14px;font-size:14px;}
+    body{padding-top:76px;}
+    .container {margin:35px auto;padding:0 18px;}
+    .goods-main-title {font-size:22px;margin-bottom:30px;}
+    .goods-wrap {grid-template-columns: 1fr !important;gap:30px;}
+    .goods-img-area {height:220px;}
+    .goods-info{padding:18px;}
+    .goods-name {font-size:18px;}
+    .goods-price {font-size:20px;}
+    .top-qr-box {width:120px;padding:12px;right:12px;top:86px;}
+    .top-qr-box img {width:95px;height:95px;}
+    .top-qr-box p {font-size:13px;}
+    .buy-popup {width:calc(100% - 36px);padding:26px;}
+    .pop-qr {width:180px;height:180px;}
+}
+</style>
+</head>
+<body>
+<!-- 顶部头部 -->
+<div class="header">
+    <h1 class="brand-title" id="pageTitle"></h1>
+    <div class="back-home">
+        <a href="index.html">首页</a>
+    </div>
+</div>
+
+<!-- 右上角下单二维码 -->
+<div class="top-qr-box">
+    <img id="topQrImg" alt="下单二维码">
+    <p>扫码立即下单</p>
+</div>
+
+<!-- 酒水商品区域 -->
+<div class="container">
+    <h2 class="goods-main-title">贵州迎宾酒系列产品</h2>
+    <div class="goods-wrap" id="goodsContainer"></div>
+</div>
+
+<!-- 酒水下单弹窗 -->
+<div class="mask" id="maskLayer">
+    <div class="buy-popup">
+        <h3 id="popTitleDom"></h3>
+        <img class="pop-qr" id="popQrDom" alt="客服下单二维码">
+        <p class="pop-tip-text" id="popTipDom"></p>
+        <button class="pop-close" id="popCloseBtn"></button>
+    </div>
+</div>
+
+<script>
+const cfg = CONFIG;
+let timerInstance = null;
+
+// 页面基础赋值
+document.getElementById("pageTitle").innerText = cfg.siteName;
+document.getElementById("topQrImg").src = cfg.qrTopRight;
+document.getElementById("popQrDom").src = cfg.qrPopupBuy;
+document.getElementById("popTitleDom").innerText = cfg.popupTitle;
+document.getElementById("popTipDom").innerText = cfg.popupHint;
+document.getElementById("popCloseBtn").innerText = cfg.popupCloseText;
+
+// 渲染酒水商品列表
+const goodsBox = document.getElementById("goodsContainer");
+cfg.goods.forEach(item => {
+    let card = document.createElement("div");
+    card.className = "goods-card";
+    card.innerHTML = `
+        <div class="goods-img-area">
+            <img src="./${item.imgSrc}" alt="${item.name}" onerror="this.parentElement.innerText='图片未找到，请核对图片文件名'">
+        </div>
+        <div class="goods-info">
+            <h3 class="goods-name">${item.name}</h3>
+            <p class="goods-desc">${item.desc}</p>
+            <div class="goods-price">售价：${item.price}</div>
+            <button class="buy-btn">立即购买</button>
+        </div>
+    `;
+    goodsBox.appendChild(card);
+});
+
+// 酒水下单弹窗完整逻辑（倒计时自动跳转微信、关闭弹窗）
+const mask = document.getElementById("maskLayer");
+const closeBtn = document.getElementById("popCloseBtn");
+const allBuyBtns = document.querySelectorAll(".buy-btn");
+function openBuyPopup(){
+    mask.style.display = "flex";
+    clearInterval(timerInstance);
+    let leftTime = cfg.waitSecond;
+    timerInstance = setInterval(()=>{
+        leftTime--;
+        if(leftTime <= 0){
+            clearInterval(timerInstance);
+            window.location.href = cfg.wechatJumpUrl;
+        }
+    },1000);
+}
+function closeBuyPopup(){
+    mask.style.display = "none";
+    clearInterval(timerInstance);
+}
+allBuyBtns.forEach(btn=> btn.onclick = openBuyPopup);
+closeBtn.onclick = closeBuyPopup;
+mask.onclick = e => {if(e.target === mask) closeBuyPopup();};
+</script>
+</body>
+</html>

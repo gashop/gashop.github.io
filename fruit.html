@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端关键视口适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>田园鲜果 - 产地水果农产品商城</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7fff7;
+            min-height: 100vh;
+        }
+
+        /* 桌面端左侧导航 */
+        .left-nav {
+            width: 220px;
+            background: #2e7d32;
+            color: #fff;
+            padding: 30px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+        .nav-title {
+            text-align: center;
+            font-size: 22px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #4caf50;
+            margin: 0 20px 20px;
+        }
+        .nav-list {
+            list-style: none;
+        }
+        .nav-list li {
+            margin: 5px 15px;
+        }
+        .nav-list a {
+            display: block;
+            color: #e8f5e9;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-align: center;  /* 导航文字居中核心样式 */
+        }
+        .nav-list a:hover, .nav-list a.active {
+            background: #4caf50;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        /* 移动端汉堡菜单按钮 默认隐藏 */
+        .menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 44px;
+            height: 44px;
+            background: #2e7d32;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 22px;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        /* 移动端遮罩层 */
+        .nav-mask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 98;
+        }
+        .nav-mask.show {
+            display: block;
+        }
+
+        /* 右侧商品主区域 */
+        .goods-main {
+            margin-left: 220px;
+            padding: 30px;
+            transition: margin-left 0.3s;
+        }
+        .main-header {
+            padding-bottom: 20px;
+            border-bottom: 2px solid #c8e6c9;
+            margin-bottom: 30px;
+        }
+        .main-header h1 {
+            color: #2e7d32;
+            font-size: 28px;
+        }
+        .main-header p {
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* 商品网格 */
+        .goods-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        .goods-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(46, 125, 50, 0.1);
+            transition: 0.3s;
+        }
+        .goods-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.15);
+        }
+        .goods-img {
+            height: 180px;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #2e7d32;
+        }
+        .goods-info {
+            padding: 15px;
+        }
+        .goods-name {
+            font-size: 17px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .goods-desc {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .goods-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price-num {
+            font-size: 22px;
+            color: #e53935;
+            font-weight: bold;
+        }
+        .buy-btn {
+            padding: 7px 14px;
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .buy-btn:hover {
+            background: #2e7d32;
+        }
+
+        /* ===================== 二维码下单弹窗样式 ===================== */
+        .qr-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-modal.show {
+            display: flex;
+        }
+        .qr-box {
+            background: #ffffff;
+            width: 320px;
+            padding: 30px 25px;
+            border-radius: 14px;
+            text-align: center;
+            position: relative;
+        }
+        /* 关闭按钮 */
+        .qr-close {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        .qr-close:hover {
+            color: #333;
+        }
+        .qr-title {
+            font-size: 18px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: #eee;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            border: 1px dashed #bbb;
+        }
+        .qr-tip {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* ===================== 移动端媒体查询 768px以下手机适配 ===================== */
+        @media screen and (max-width: 768px) {
+            .menu-btn {
+                display: block;
+            }
+            /* 导航默认隐藏到屏幕左侧外 */
+            .left-nav {
+                transform: translateX(-100%);
+            }
+            .left-nav.mobile-open {
+                transform: translateX(0);
+            }
+            /* 主体内容取消左边距 */
+            .goods-main {
+                margin-left: 0;
+                padding: 70px 15px 20px;
+            }
+            .main-header h1 {
+                font-size: 22px;
+            }
+            /* 商品卡片单列/双列自适应 */
+            .goods-wrap {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .goods-img {
+                height: 140px;
+            }
+            .qr-box {
+                width: 88%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 移动端汉堡菜单按钮 -->
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <!-- 移动端导航遮罩 -->
+    <div class="nav-mask" id="navMask"></div>
+
+    <!-- 左侧导航栏 -->
+    <aside class="left-nav" id="sideNav">
+        <div class="nav-title">🍃鲜果农产品</div>
+        <ul class="nav-list">
+            <li><a href="#" class="active" data-type="all">全部水果</a></li>
+            <li><a href="#" data-type="apple">苹果专区</a></li>
+            <li><a href="#" data-type="kiwi">猕 猴 桃</a></li>
+            <li><a href="#" data-type="orange">柑橘橙子</a></li>
+            <li><a href="#" data-type="grape">葡萄提子</a></li>
+            <li><a href="#" data-type="strawberry">浆果草莓</a></li>
+            <li><a href="#" data-type="season">当季新品</a></li>
+            <li><a href="#">产地介绍</a></li>
+    <!--    <li><a href="#" target="_blank">物流说明</a></li>
+            <li><a href="#" target="_blank">联系我们</a></li>  -->
+        </ul>
+    </aside>
+
+    <!-- 右侧商品展示区 -->
+    <main class="goods-main">
+	    <div class="back-home">
+            <a href="index.html">首页</a>
+        </div>
+        <div class="main-header">
+            <h1>新鲜产地直供水果</h1>
+            <p>深山原生态种植，现摘现发，无催熟自然成熟农产品</p>
+        </div>
+        <div class="goods-wrap" id="goodsContainer"></div>
+    </main>
+
+    <!-- 二维码下单弹窗 -->
+    <div class="qr-modal" id="qrModal">
+        <div class="qr-box">
+            <span class="qr-close" id="qrClose">×</span>
+            <h3 class="qr-title">微信扫码下单购买</h3>
+            <!-- 此处后续替换为真实二维码图片 -->
+            <div class="qr-code">微信下单二维码</div>
+            <p class="qr-tip">
+                长按识别二维码<br>添加商家微信，选购新鲜水果
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 水果商品数据
+        const goodsList = [
+            {type: "apple",name: "红富士脆甜苹果",desc: "山东烟台产地，脆爽多汁，糖度14°+",price: 5.8,icon: "🍎"},
+            {type: "apple",name: "阿克苏冰糖心苹果",desc: "新疆雪域种植，果心冰糖纹路，超甜",price: 7.9,icon: "🍎"},
+            {type: "kiwi",name: "陕西绿心猕猴桃",desc: "秦岭深山采摘，软糯酸甜，维C满满",price: 4.5,icon: "🥝"},
+            {type: "kiwi",name: "浦江黄心猕猴桃",desc: "黄金果肉，甜度更高，细腻无硬芯",price: 6.2,icon: "🥝"},
+            {type: "orange",name: "赣南脐橙",desc: "皮薄多汁，手工现摘，榨汁鲜果首选",price: 6.6,icon: "🍊"},
+            {type: "orange",name: "耙耙柑春见橘子",desc: "细嫩化渣，不上火，老人小孩都爱吃",price: 8.3,icon: "🍊"},
+            {type: "grape",name: "阳光玫瑰葡萄",desc: "晴王青提，花香清甜，颗粒饱满",price: 12.8,icon: "🍇"},
+            {type: "grape",name: "巨峰黑葡萄",desc: "本土露天种植，果肉厚实酸甜浓郁",price: 7.2,icon: "🍇"},
+            {type: "strawberry",name: "奶油草莓",desc: "大棚无公害种植，奶香浓郁个头饱满",price: 15.5,icon: "🍓"},
+            {type: "season",name: "秋月梨",desc: "当季网红鲜果，水润清肺，清甜降火",price: 5.3,icon: "🍐"},
+            {type: "season",name: "脆甜冬枣",desc: "嘎嘣脆甜，皮薄肉嫩，秋日爆款鲜果",price: 9.1,icon: "🫒"},
+            {type: "season",name: "突尼斯软籽石榴",desc: "不用吐籽，籽粒晶莹饱满多汁",price: 8.5,icon: "🌰"}
+        ];
+
+        const container = document.getElementById('goodsContainer');
+        const navLinks = document.querySelectorAll('.nav-list a');
+        // 移动端菜单元素
+        const menuBtn = document.getElementById('menuBtn');
+        const sideNav = document.getElementById('sideNav');
+        const navMask = document.getElementById('navMask');
+        // 二维码弹窗元素
+        const qrModal = document.getElementById('qrModal');
+        const qrClose = document.getElementById('qrClose');
+
+        // 渲染商品
+        function renderGoods(type = 'all') {
+            let renderData = type === 'all' ? goodsList : goodsList.filter(item => item.type === type);
+            let html = '';
+            renderData.forEach(item => {
+                html += `
+                    <div class="goods-card">
+                        <div class="goods-img">${item.icon}</div>
+                        <div class="goods-info">
+                            <h3 class="goods-name">${item.name}</h3>
+                            <p class="goods-desc">${item.desc}</p>
+                            <div class="goods-price">
+                                <span class="price-num">¥${item.price}</span>
+                                <button class="buy-btn">立即选购</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        renderGoods();
+
+        // 导航分类筛选
+        navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+        // 判断：当前链接是分类筛选（存在data-type），才阻止跳转、执行筛选
+        if(this.dataset.type){
+            e.preventDefault();
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            const type = this.dataset.type;
+            renderGoods(type);
+            // 移动端点击后关闭侧边菜单
+            if(window.innerWidth <= 768){
+                sideNav.classList.remove('mobile-open');
+                navMask.classList.remove('show');
+            }
+        }
+        // 没有data-type：页面跳转，不执行任何阻止，a标签默认href正常生效
+        })
+        })
+
+
+        // ========== 移动端侧边栏开关 ==========
+        function openNav(){
+            sideNav.classList.add('mobile-open');
+            navMask.classList.add('show');
+        }
+        function closeNav(){
+            sideNav.classList.remove('mobile-open');
+            navMask.classList.remove('show');
+        }
+        menuBtn.addEventListener('click', openNav);
+        navMask.addEventListener('click', closeNav);
+
+        // ========== 选购按钮打开二维码弹窗 ==========
+        container.addEventListener('click', function(e) {
+            if(e.target.classList.contains('buy-btn')){
+                qrModal.classList.add('show');
+            }
+        })
+        // 关闭弹窗：叉号、点击遮罩、ESC按键
+        qrClose.addEventListener('click', ()=>qrModal.classList.remove('show'));
+        qrModal.addEventListener('click', function(e){
+            if(e.target === qrModal) qrModal.classList.remove('show');
+        })
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape'){
+                qrModal.classList.remove('show');
+            }
+        })
+    </script>
+</body>
+</html>

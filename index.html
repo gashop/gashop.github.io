@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>首页</title>
+    <style>
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: "Microsoft YaHei", sans-serif;}
+        body {background: linear-gradient(135deg, #f0f7ff, #ffffff);min-height: 100vh;padding-bottom: 120px;}
+        /* 顶部菜单栏 */
+        header {
+            position: sticky;top:0;z-index:99;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(8px);
+            border-bottom:1px solid #cce0ff;
+            display:flex;justify-content:space-between;align-items:center;
+            padding:0 20px;height:56px;
+        }
+        .header-title {font-size:50px;font-weight:bold;color:#0056cc;}
+        .share-btn {
+            padding:6px 14px;background:#ff9500;color:#fff;border:none;
+            border-radius:20px;cursor:pointer;font-size:14px;
+        }
+        /* 主体容器 左侧导航+中间工作区 */
+        .main-wrap {max-width:1300px;margin:20px auto;display:grid;grid-template-columns:180px 1fr;gap:24px;padding:0 16px;}
+        /* 左侧导航区 简历链接 */
+        .left-nav {
+            background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .nav-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
+        .resume-item {
+            display:block;padding:8px 10px;margin:4px 0;border-radius:8px;
+            color:#444;text-decoration:none;font-size:13px;
+        }
+        .resume-item:hover {background:#e6f0ff;color:#0056cc;}
+        /* 中间工作区 文档链接管理 */
+        .work-area {
+            background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:24px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .work-title {font-size:16px;font-weight:bold;color:#0056cc;margin-bottom:16px;}
+        .input-row {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+        .input-item label {display:block;font-size:13px;color:#555;margin-bottom:4px;}
+        .input-item input {width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;outline:none;}
+        .link-list {max-height:240px;overflow-y:auto;border:1px solid #eee;padding:10px;border-radius:8px;margin-bottom:16px;}
+        .link-item {display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid #f5f5f5;}
+        .link-item:last-child {border-bottom:none;}
+        .link-name {color:#0056cc;text-decoration:none;font-size:14px;}
+        .btn-row {display:flex;gap:12px;}
+        .btn-add,.btn-del {flex:1;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
+        .btn-add {background:#0056cc;color:#fff;}
+        .btn-del {background:#ff4444;color:#fff;}
+        /* 右下角友情链接区 */
+        .friend-link-box {margin-top:30px;display:flex;justify-content:flex-end;}
+        .friend-inner {
+            width:320px;background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .friend-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
+        .link-grid {display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+        .page-link {
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            padding:12px 6px;border-radius:10px;text-decoration:none;font-size:12px;
+        }
+        .link-fruit {background:#e6f9ed;color:#009944;}
+        .link-wine {background:#fff3e6;color:#cc6600;}
+        .link-script {background:#e6f0ff;color:#0056cc;}
+        /* 底部状态栏弹窗按钮 */
+        .status-bar {position:fixed;left:250px;bottom:20px;display:flex;gap:12px;z-index:98;}
+        .status-btn {
+            padding:10px 16px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;
+        }
+        .happy-btn {background:linear-gradient(135deg,#ff5e99,#ff3366);}
+        .life-btn {background:linear-gradient(135deg,#ffb347,#ff8800);}
+        /* 弹窗通用样式 */
+        .mask {
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,0.6);z-index:999;display:none;
+            align-items:center;justify-content:center;
+        }
+        .pop-box {background:#fff;border-radius:12px;padding:24px;min-width:320px;max-width:90%;position:relative;}
+        .pop-title {font-size:18px;font-weight:bold;margin-bottom:16px;text-align:center;}
+        .close-pop {
+            position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#888;
+        }
+        /* 快乐人生弹窗 */
+        .happy-item-wrap {display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+        .happy-item {text-align:center;padding:10px;background:#ffe6ef;border-radius:10px;}
+        /* 人生必备弹窗 */
+        .life-list li {
+            list-style:none;padding:8px 12px;background:#fff3e6;border-radius:8px;margin:6px 0;
+            color:#cc6600;font-size:14px;cursor:pointer;
+        }
+        .life-list li:hover {background:#ffe2c2;}
+        /* 游走悬浮二维码 */
+        .float-qr {
+            position:fixed;z-index:998;width:110px;padding:8px;
+            background:rgba(255,80,80,0.75);border:2px solid #fff;border-radius:10px;
+            text-align:center;color:#fff;pointer-events:none;
+        }
+        .qr-box {width:90px;height:90px;background:#fff;border-radius:6px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#ff5050;font-size:32px;}
+        .qr-box img {width:80px;height:80px;object-fit:contain;}
+        .qr-text {font-size:12px;}
+    </style>
+</head>
+<body>
+    <!-- 顶部菜单栏 -->
+    <header>
+        <div class="header-title">faceSystem</div>
+        <button class="share-btn" onclick="sharePage()">分享给好友</button>
+    </header>
+
+    <!-- 游走悬浮二维码【已修改，放入img图片】 -->
+    <div class="float-qr" id="floatQr">
+        <div class="qr-box">
+            <!-- 此处src填写你的二维码图片文件名，和html同目录直接写文件名 -->
+            <img src="qrcode.png" alt="咨询二维码">
+        </div>
+        <div class="qr-text">扫码咨询</div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="main-wrap">
+        <!-- 左侧导航区：简历PDF链接 -->
+        <div class="left-nav">
+            <div class="nav-title">PERSONAL RESUME</div>
+            <a href="jfssgcs.pdf" target="_blank" class="resume-item">弱电工程技术员</a>
+            <a href="rjxtywgcs.pdf" target="_blank" class="resume-item">系统运维工程师</a>
+            <a href="rjssgcs.pdf" target="_blank" class="resume-item">软件实施工程师</a>
+            <a href="wlywgcs.pdf" target="_blank" class="resume-item">网络运维工程师</a>
+            <a href="idcjfywgcs.pdf" target="_blank" class="resume-item">IDC机房运维工程师</a>
+            <a href="dbasjkgly.pdf" target="_blank" class="resume-item">DB A数据库 管理员</a>
+        </div>
+
+        <!-- 中间工作区：友情链接管理 -->
+        <div class="work-wrap">
+            <div class="work-area">
+                <div class="work-title">文档链接</div>
+                <div class="input-row">
+                    <div class="input-item">
+                        <label>文档显示名称</label>
+                        <input type="text" id="docName" placeholder="例：酱香酒知识库">
+                    </div>
+                    <div class="input-item">
+                        <label>PDF文件名称</label>
+                        <input type="text" id="pdfName" placeholder="例：jxjzsk.pdf">
+                    </div>
+                </div>
+                <div class="link-list" id="linkList">
+                    <div class="link-item">
+                        <input type="checkbox" class="check-item">
+                        <a href="jxjzsk.pdf" target="_blank" class="link-name">酱香酒知识库</a>
+                    </div>
+                    <div class="link-item">
+                        <input type="checkbox" class="check-item">
+                        <a href="rjkfqd.pdf" target="_blank" class="link-name">软件开发前端</a>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-add" onclick="addLink()">添加</button>
+                    <button class="btn-del" onclick="delLink()">批量删除</button>
+                </div>
+            </div>
+
+            <!-- 右下角友情链接区：三个子页面跳转 -->
+            <div class="friend-link-box">
+                <div class="friend-inner">
+                    <div class="friend-title">友情链接</div>
+                    <div class="link-grid">
+                        <a href="fruit.html" class="page-link link-fruit">🍎<span>水果农产品</span></a>
+                        <a href="wine.html" class="page-link link-wine">🍷<span>酱香美酒</span></a>
+                        <a href="script.html" class="page-link link-script">💻<span>脚本之家</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部状态栏按钮 -->
+    <div class="status-bar">
+        <button class="status-btn happy-btn" onclick="openHappyMask()">快乐人生</button>
+        <button class="status-btn life-btn" onclick="openLifeMask()">人生必备</button>
+    </div>
+
+    <!-- 快乐人生弹窗遮罩 -->
+    <div class="mask" id="happyMask">
+        <div class="pop-box">
+            <span class="close-pop" onclick="closeHappyMask()">×</span>
+            <div class="pop-title">快乐人生</div>
+            <div class="happy-item-wrap">
+                <div class="happy-item">💰<br>钱</div>
+                <div class="happy-item">❤️<br>家人</div>
+                <div class="happy-item">❤️<br>爱人</div>
+                <div class="happy-item">❤️<br>朋友</div>
+                <div class="happy-item">❤️<br>狐朋狗友</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 人生必备弹窗遮罩【已修复双击跳转】 -->
+    <div class="mask" id="lifeMask">
+        <div class="pop-box">
+            <span class="close-pop" onclick="closeLifeMask()">×</span>
+            <div class="pop-title">Rs ability列表</div>
+            <ul class="life-list">
+                <!-- ondblclick 双击跳转，自行修改href地址 -->
+                <li onclick="window.open('cash.html','_blank')">变现能力</li>
+                <li onclick="window.open('love.html','_blank')">恋爱能力</li>
+                <li onclick="window.open('talk.html','_blank')">口才、演讲、闲聊</li>
+                <li onclick="window.open('jk.html','_blank')">JK身体</li>
+                <li onclick="window.open('standard.html','_blank')">双重标准</li>
+                <li onclick="window.open('english.html','_blank')">英语口语交流、阅读</li>
+                <li onclick="window.open('write.html','_blank')">语文写作</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 1、分享页面功能
+        function sharePage(){
+            const url = window.location.href;
+            if(navigator.clipboard){
+                navigator.clipboard.writeText(url).then(()=>alert("链接复制成功，可转发好友！"));
+            }else{
+                let input = document.createElement("input");
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand("copy");
+                document.body.removeChild(input);
+                alert("链接复制成功，可转发好友！");
+            }
+        }
+        // 2、文档链接添加
+        function addLink(){
+            const name = document.getElementById("docName").value.trim();
+            const pdf = document.getElementById("pdfName").value.trim();
+            if(!name || !pdf){
+                alert("文档名称和PDF文件名不能为空！");
+                return;
+            }
+            const listWrap = document.getElementById("linkList");
+            const newItem = document.createElement("div");
+            newItem.className = "link-item";
+            newItem.innerHTML = `
+                <input type="checkbox" class="check-item">
+                <a href="${pdf}" target="_blank" class="link-name">${name}</a>
+            `;
+            listWrap.appendChild(newItem);
+            document.getElementById("docName").value = "";
+            document.getElementById("pdfName").value = "";
+        }
+        // 3、批量删除勾选链接
+        function delLink(){
+            const allItems = document.querySelectorAll(".check-item");
+            let checkedList = [];
+            allItems.forEach(ck=>{
+                if(ck.checked) checkedList.push(ck.parentElement);
+            });
+            if(checkedList.length == 0){
+                alert("请先勾选需要删除的文档链接！");
+                return;
+            }
+            if(confirm(`确认删除选中的${checkedList.length}条链接？`)){
+                checkedList.forEach(item=>item.remove());
+            }
+        }
+        // 4、弹窗开关
+        function openHappyMask(){document.getElementById("happyMask").style.display = "flex";}
+        function closeHappyMask(){document.getElementById("happyMask").style.display = "none";}
+        function openLifeMask(){document.getElementById("lifeMask").style.display = "flex";}
+        function closeLifeMask(){document.getElementById("lifeMask").style.display = "none";}
+        // 5、游走二维码动画
+        const floatBox = document.getElementById("floatQr");
+        let x = 20, y = window.innerHeight / 2;
+        let vx = 1.6, vy = 1.2;
+        function moveQr(){
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            const boxW = floatBox.offsetWidth;
+            const boxH = floatBox.offsetHeight;
+            x += vx; y += vy;
+            if(x <= 0 || x + boxW >= winW) vx = -vx;
+            if(y <= 0 || y + boxH >= winH) vy = -vy;
+            floatBox.style.left = x + "px";
+            floatBox.style.top = y + "px";
+            requestAnimationFrame(moveQr);
+        }
+        moveQr();
+    </script>
+</body>
+</html>
