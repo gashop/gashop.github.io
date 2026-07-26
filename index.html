@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 完美移动端视口配置，页面自动贴合手机屏幕，禁止浏览器默认缩放 -->
+    <!-- 完美移动端视口配置 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>首页</title>
     <style>
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: "Microsoft YaHei", sans-serif;}
-        body {background: linear-gradient(135deg, #f0f7ff, #ffffff);min-height: 100vh;padding-bottom: 120px;}
+        body {background: linear-gradient(135deg, #f0f7ff, #ffffff);min-height: 100vh;padding-bottom: 120px;overflow-x: hidden;}
         /* 顶部菜单栏 */
         header {
             position: sticky;top:0;z-index:99;
@@ -17,12 +17,12 @@
             display:flex;justify-content:space-between;align-items:center;
             padding:0 20px;height:56px;
         }
-        .header-title {font-size:50px;font-weight:bold;color:#0056cc;}
+        .header-title {font-size:30px;font-weight:bold;color:#0056cc;}
         .share-btn {
             padding:6px 14px;background:#ff9500;color:#fff;border:none;
             border-radius:20px;cursor:pointer;font-size:14px;
         }
-        /* 主体容器 左侧导航+中间工作区 */
+        /* 主体容器 左侧导航+中间工作区 固定双栏，所有屏幕都不堆叠 */
         .main-wrap {max-width:1300px;margin:20px auto;display:grid;grid-template-columns:180px 1fr;gap:24px;padding:0 16px;}
         /* 左侧导航区 简历链接 */
         .left-nav {
@@ -104,92 +104,64 @@
         .qr-box img {width:80px;height:80px;object-fit:contain;}
         .qr-text {font-size:12px;}
 
-        /* ===================== 手机端自适应（768px以下自动缩小适配屏幕） ===================== */
+        /* ===================== 手机端适配：整体等比缩放，布局完全保留PC双栏，不垂直堆叠 ===================== */
+        @media screen and (max-width: 1024px) {
+            /* 整体页面缩放容器 */
+            body {
+                display: flex;
+                justify-content: center;
+            }
+            .page-container {
+                transform-origin: top center;
+                transform: scale(0.85);
+                width: 1300px;
+            }
+            /* 底部按钮适配缩放后位置 */
+            .status-bar {
+                left: calc(180px + 24px);
+            }
+        }
         @media screen and (max-width: 768px) {
             html {
-                /* 页面基础缩放，小屏自动整体缩小适配 */
                 font-size: 14px;
             }
             body {
-                padding-bottom: 90px;
+                display: flex;
+                justify-content: center;
             }
-            /* 顶部导航栏自适应缩小 */
+            /* 整体缩小0.68倍，完整保留左右分栏布局 */
+            .page-container {
+                transform-origin: top center;
+                transform: scale(0.68);
+                width: 1300px;
+            }
             header {
                 padding: 0 12px;
                 height: 48px;
             }
             .header-title {
-                font-size: 24px;
+                font-size:26px;
             }
             .share-btn {
                 padding: 5px 10px;
                 font-size: 12px;
             }
-
-            /* 主体布局改为垂直堆叠，宽度100%适配屏幕 */
-            .main-wrap {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 16px;
-                margin: 12px auto;
-                padding: 0 10px;
-                width: 100%;
-            }
-
-            /* 所有卡片缩小内边距，贴合屏幕 */
-            .left-nav, .work-area {
-                padding: 14px;
-                width: 100%;
-            }
-
-            /* 双栏输入框改为单列，自动适配屏幕宽度 */
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-
-            /* 友情链接全屏宽度，居中展示 */
+            /* 友情链接居右不变 */
             .friend-link-box {
-                justify-content: center;
+                justify-content: flex-end;
             }
-            .friend-inner {
-                width: 100%;
-            }
-            .page-link {
-                padding: 14px 6px;
-            }
-
-            /* 底部按钮铺满屏幕，等分宽度 */
-            .status-bar {
-                left: 10px;
-                right: 10px;
-                bottom: 15px;
-                width: calc(100% - 20px);
-            }
-            .status-btn {
-                flex: 1;
-                padding: 10px 4px;
-                font-size: 13px;
-            }
-
-            /* 弹窗自动缩小适配手机屏幕 */
+            /* 弹窗内部自适应缩放 */
             .pop-box {
                 padding: 18px 16px;
-                width: 94%;
             }
             .pop-title {
                 font-size: 16px;
             }
-            /* 快乐人生5列改为3列，适配窄屏 */
             .happy-item-wrap {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(5,1fr);
                 gap: 8px;
             }
-            .happy-item {
-                padding: 8px 4px;
-                font-size: 14px;
-            }
-
-            /* 悬浮二维码整体缩小，不遮挡页面内容 */
+            /* 悬浮二维码缩小 */
             .float-qr {
                 width: 80px;
                 padding: 6px;
@@ -205,21 +177,25 @@
             .qr-text {
                 font-size: 10px;
             }
-
-            /* 文档列表高度缩小，适配手机 */
             .link-list {
                 max-height: 180px;
             }
-            .btn-add, .btn-del {
-                padding: 10px 4px;
-                font-size: 13px;
+            /* 底部按钮跟随缩放容器偏移 */
+            .status-bar {
+                left: calc(180px + 24px);
+                bottom:15px;
             }
         }
 
-        /* 超小屏手机（480px以下）进一步缩小 */
+        /* 超小屏手机（480px以下）进一步缩小整体页面 */
         @media screen and (max-width: 480px) {
             html {
                 font-size: 13px;
+            }
+            .page-container {
+                transform-origin: top center;
+                transform: scale(0.52);
+                width: 1300px;
             }
             .work-title {
                 font-size: 15px;
@@ -234,6 +210,8 @@
     </style>
 </head>
 <body>
+<!-- 新增页面根容器：用于整体scale缩放，所有页面内容放入其中 -->
+<div class="page-container">
     <!-- 顶部菜单栏 -->
     <header>
         <div class="header-title">faceSystem</div>
@@ -342,6 +320,7 @@
             </ul>
         </div>
     </div>
+</div>
 
     <script>
         // 1、分享页面功能

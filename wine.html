@@ -270,7 +270,7 @@ a{
     background:#b30000;
 }
 
-/* ========== 移动端自适应 美化适配 ========== */
+/* ========== 移动端自适应 美化适配（已修复2处bug） ========== */
 @media screen and (max-width: 768px) {
     .header {padding:14px 18px;}
     .brand-title {font-size:22px;letter-spacing:2px;}
@@ -283,26 +283,45 @@ a{
     .goods-info{padding:18px;}
     .goods-name {font-size:18px;}
     .goods-price {font-size:20px;}
-    .top-qr-box {width:120px;padding:12px;right:12px;top:86px;}
-    .top-qr-box img {width:95px;height:95px;object-fit:contain;}
-    .top-qr-box p {font-size:13px;}
 
-    /* 修复弹窗全屏拉长问题 */
+    /* 修复1：移动端左下角悬浮二维码盒子拉伸变形问题 */
+    .top-qr-box {
+        position: fixed;
+        bottom: 16px;
+        left: 10px;
+        width: 120px;
+        padding: 10px;
+    }
+    .top-qr-box img {
+        width: 95px;
+        height: 95px;
+        object-fit: contain;
+        display:block;
+        margin:0 auto;
+    }
+    .top-qr-box p {
+        font-size:13px;
+        margin-top:6px;
+    }
+
+    /* 修复2：删除弹窗左上角错位代码，恢复居中正常显示 */
     .buy-popup {
-        width:calc(100% - 36px);
-        padding:26px;
-        max-height: 80vh; /* 限制弹窗最大高度 */
-        overflow-y: auto;  /* 内容过多内部滚动 */
+        width: calc(100% - 36px);
+        padding: 26px;
+        max-height: 80vh;
+        overflow-y: auto;
         box-sizing: border-box;
-        /* 居中定位，取消上下0铺满 */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        /* 取消错误偏移，依靠父mask的flex自动居中 */
+        top: auto;
+        left: auto;
+        transform: none;
     }
     .pop-qr {
         width:180px;
         height:180px;
-        object-fit: contain; /* 二维码不变形 */
+        object-fit: contain;
+        display:block;
+        margin:0 auto;
     }
 }
 
@@ -317,7 +336,7 @@ a{
     </div>
 </div>
 
-<!-- 右上角下单二维码 -->
+<!-- 左下角下单二维码 -->
 <div class="top-qr-box">
     <img id="topQrImg" alt="下单二维码">
     <p>扫码立即下单</p>
