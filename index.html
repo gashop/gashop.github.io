@@ -35,8 +35,13 @@
         .share-btn {
             padding:6px 14px;background:#ff9500;color:#fff;border:none;
             border-radius:20px;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
         }
-        /* 主体容器 固定双栏结构，永远左右并排 */
+        .share-btn:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+        /* 主体容器 PC固定双栏结构，永远左右并排 */
         .main-wrap {
             width: 100%;
             margin:20px auto;
@@ -54,6 +59,7 @@
         .resume-item {
             display:block;padding:8px 10px;margin:4px 0;border-radius:8px;
             color:#444;text-decoration:none;font-size:13px;
+            transition: background 0.2s ease;
         }
         .resume-item:hover {background:#e6f0ff;color:#0056cc;}
         /* 中间工作区 */
@@ -64,13 +70,26 @@
         .work-title {font-size:16px;font-weight:bold;color:#0056cc;margin-bottom:16px;}
         .input-row {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
         .input-item label {display:block;font-size:13px;color:#555;margin-bottom:4px;}
-        .input-item input {width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;outline:none;}
+        .input-item input {
+            width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;outline:none;
+            transition: border 0.2s ease;
+        }
+        .input-item input:focus {
+            border-color: #0056cc;
+            box-shadow: 0 0 0 3px rgba(0,86,204,0.1);
+        }
         .link-list {max-height:240px;overflow-y:auto;border:1px solid #eee;padding:10px;border-radius:8px;margin-bottom:16px;}
         .link-item {display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid #f5f5f5;}
         .link-item:last-child {border-bottom:none;}
         .link-name {color:#0056cc;text-decoration:none;font-size:14px;}
         .btn-row {display:flex;gap:12px;}
-        .btn-add,.btn-del {flex:1;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
+        .btn-add,.btn-del {
+            flex:1;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
+        }
+        .btn-add:active,.btn-del:active {
+            transform: scale(0.97);
+        }
         .btn-add {background:#0056cc;color:#fff;}
         .btn-del {background:#ff4444;color:#fff;}
         /* 右下角友情链接区 */
@@ -84,6 +103,10 @@
         .page-link {
             display:flex;flex-direction:column;align-items:center;justify-content:center;
             padding:12px 6px;border-radius:10px;text-decoration:none;font-size:12px;
+            transition: transform 0.2s ease;
+        }
+        .page-link:active {
+            transform: scale(0.95);
         }
         .link-fruit {background:#e6f9ed;color:#009944;}
         .link-wine {background:#fff3e6;color:#cc6600;}
@@ -97,6 +120,10 @@
         }
         .status-btn {
             padding:10px 16px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
+        }
+        .status-btn:active {
+            transform: scale(0.96);
         }
         .happy-btn {background:linear-gradient(135deg,#ff5e99,#ff3366);}
         .life-btn {background:linear-gradient(135deg,#ffb347,#ff8800);}
@@ -110,7 +137,9 @@
         .pop-title {font-size:18px;font-weight:bold;margin-bottom:16px;text-align:center;}
         .close-pop {
             position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#888;
+            transition: color 0.2s;
         }
+        .close-pop:hover {color:#333;}
         /* 快乐人生弹窗 */
         .happy-item-wrap {display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
         .happy-item {text-align:center;padding:10px;background:#ffe6ef;border-radius:10px;}
@@ -118,6 +147,7 @@
         .life-list li {
             list-style:none;padding:8px 12px;background:#fff3e6;border-radius:8px;margin:6px 0;
             color:#cc6600;font-size:14px;cursor:pointer;
+            transition: background 0.2s ease;
         }
         .life-list li:hover {background:#ffe2c2;}
         /* 游走悬浮二维码 */
@@ -125,14 +155,15 @@
             position:fixed;z-index:998;width:110px;padding:8px;
             background:rgba(255,80,80,0.75);border:2px solid #fff;border-radius:10px;
             text-align:center;color:#fff;pointer-events:none;
+            box-shadow: 0 4px 12px rgba(255,80,80,0.3);
         }
         .qr-box {width:90px;height:90px;background:#fff;border-radius:6px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#ff5050;font-size:32px;}
         .qr-box img {width:80px;height:80px;object-fit:contain;}
         .qr-text {font-size:12px;}
 
-        /* ===================== 移动端适配：无scale缩放，纯尺寸自适应，布局结构完全不变 ===================== */
-        @media screen and (max-width: 1024px) {
-            /* 基础尺寸缩小，双栏grid结构不变 */
+        /* ===================== 移动端美化适配 ===================== */
+        /* 大屏平板 769px - 1024px 保留双栏，缩小尺寸美化 */
+        @media screen and (max-width: 1024px) and (min-width:769px) {
             header {
                 height: 48px;
                 padding: 0 16px;
@@ -145,8 +176,8 @@
                 font-size:13px;
             }
             .main-wrap {
-                gap:16px;
-                margin:15px auto;
+                gap:18px;
+                margin:18px auto;
             }
             .left-nav {
                 padding:12px;
@@ -158,7 +189,7 @@
                 width:280px;
             }
             .happy-item-wrap {
-                gap:8px;
+                gap:10px;
             }
             .float-qr {
                 width:95px;
@@ -171,53 +202,71 @@
             }
         }
 
+        /* 平板/手机横屏 ≤768px：改为上下堆叠布局，大幅美化 */
         @media screen and (max-width: 768px) {
             html {
-                font-size: 14px;
+                font-size: 15px;
             }
-            /* 侧边栏固定宽度小幅缩小，依旧左右并排不堆叠 */
+            /* 核心修改：双栏变上下堆叠 */
             .main-wrap {
-                grid-template-columns:150px 1fr;
-                gap:12px;
+                grid-template-columns: 1fr;
+                gap:16px;
                 padding:0 10px;
+                margin:16px auto;
             }
-            /* 底部按钮重新计算left，适配缩小后的侧边栏 */
+            /* 堆叠布局后底部按钮铺满居中，不再靠左 */
             .status-bar {
-                left:calc(150px + 12px);
+                left: 16px;
+                right: 16px;
                 bottom:calc(15px + env(safe-area-inset-bottom, 0));
             }
+            .status-btn {
+                flex: 1;
+                padding:12px 0;
+                font-size:15px;
+            }
             header {
-                height:44px;
-                padding:0 10px;
+                height:48px;
+                padding:0 12px;
             }
             .header-title {
                 font-size:22px;
             }
             .share-btn {
-                padding:4px 9px;
-                font-size:12px;
-            }
-            .nav-title {
+                padding:5px 12px;
                 font-size:13px;
             }
+            .nav-title {
+                font-size:14px;
+            }
             .resume-item {
-                font-size:12px;
-                padding:6px 8px;
+                font-size:14px;
+                padding:10px 12px;
+                margin:6px 0;
             }
             .work-title {
-                font-size:15px;
+                font-size:16px;
+            }
+            .input-row {
+                grid-template-columns: 1fr;
+                gap:14px;
             }
             .link-list {
-                max-height:160px;
-                padding:8px;
-            }
-            .friend-inner {
-                width:240px;
+                max-height:180px;
                 padding:12px;
             }
+            .friend-link-box {
+                justify-content: center;
+                margin-top:24px;
+            }
+            .friend-inner {
+                width:100%;
+                max-width: 420px;
+                padding:16px;
+            }
             .page-link {
-                padding:8px 4px;
-                font-size:11px;
+                padding:14px 6px;
+                font-size:13px;
             }
             .float-qr {
                 width:80px;
@@ -233,54 +282,95 @@
                 font-size:10px;
             }
             .pop-box {
-                padding:16px;
+                padding:20px;
+                width: 94vw;
             }
             .pop-title {
-                font-size:16px;
+                font-size:17px;
             }
-            /* 手机端按钮缩小 */
-            .status-btn {
-                padding:8px 12px;
-                font-size:13px;
+            .happy-item-wrap {
+                grid-template-columns: repeat(3,1fr);
+                gap:10px;
+            }
+            .happy-item {
+                padding:14px 6px;
+            }
+            .life-list li {
+                padding:12px;
+                font-size:15px;
+            }
+            .btn-add,.btn-del {
+                padding:11px;
+                font-size:15px;
             }
         }
 
+        /* 小屏手机竖屏 ≤480px 极致美化，适配小屏幕 */
         @media screen and (max-width: 480px) {
             html {
-                font-size:13px;
+                font-size:14px;
             }
-            /* 侧边栏进一步缩小，双栏结构永不改变 */
-            .main-wrap {
-                grid-template-columns:120px 1fr;
-                gap:10px;
-                margin:10px auto;
+            .page-container {
+                padding-bottom: 160px;
             }
-            .status-bar {
-                left:calc(120px + 10px);
+            header {
+                height:44px;
+                padding:0 10px;
             }
             .header-title {
                 font-size:18px;
             }
-            .left-nav {
-                padding:8px;
+            .main-wrap {
+                gap:14px;
+                margin:12px auto;
+                padding:0 8px;
             }
-            .work-area {
+            .left-nav {
                 padding:12px;
             }
+            .work-area {
+                padding:16px 12px;
+            }
+            .btn-row {
+                gap:10px;
+            }
             .btn-add,.btn-del {
-                padding:7px;
-                font-size:13px;
+                padding:10px;
+                font-size:14px;
             }
             .friend-inner {
-                width:200px;
+                max-width: 100%;
+            }
+            .link-grid {
+                gap:8px;
             }
             .happy-item-wrap {
-                grid-template-columns: repeat(3,1fr);
+                grid-template-columns: repeat(2,1fr);
+                gap:8px;
             }
-            /* 超小屏进一步缩小底部按钮 */
-            .status-btn {
-                padding:6px 10px;
-                font-size:12px;
+            .float-qr {
+                width:70px;
+                padding:4px;
+            }
+            .qr-box {
+                width:52px;height:52px;
+            }
+            .qr-box img {
+                width:44px;height:44px;
+            }
+            /* 弹窗全屏无边距 */
+            .pop-box {
+                width: 96vw;
+                padding:16px 14px;
+            }
+            .pop-title {
+                font-size:16px;
+                margin-bottom:12px;
+            }
+            .close-pop {
+                font-size:24px;
+                top:8px;
+                right:10px;
             }
         }
     </style>
