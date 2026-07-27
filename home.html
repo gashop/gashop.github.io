@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>首页</title>
+    <style>
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: "Microsoft YaHei", sans-serif;}
+        body {
+            background: linear-gradient(135deg, #f0f7ff, #ffffff);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* 适配苹果底部安全区 */
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        /* 页面容器：PC固定1300px，移动端自动适配屏幕宽度 */
+        .page-container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            /* 关键：底部预留超大空间，避开底部fixed按钮，友情链接不会被遮挡 */
+            padding-bottom: 130px;
+        }
+        /* 顶部菜单栏 */
+        header {
+            position: sticky;top:0;z-index:99;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(8px);
+            border-bottom:1px solid #cce0ff;
+            display:flex;justify-content:space-between;align-items:center;
+            padding:0 20px;height:56px;
+        }
+        .header-title {font-size:30px;font-weight:bold;color:#0056cc;}
+        .share-btn {
+            padding:6px 14px;background:#ff9500;color:#fff;border:none;
+            border-radius:20px;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
+        }
+        .share-btn:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+        /* 主体容器 PC固定双栏结构，永远左右并排 */
+        .main-wrap {
+            width: 100%;
+            margin:20px auto;
+            display:grid;
+            grid-template-columns:180px 1fr;
+            gap:24px;
+            padding:0 16px;
+        }
+        /* 左侧导航区 */
+        .left-nav {
+            background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .nav-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
+        .resume-item {
+            display:block;padding:8px 10px;margin:4px 0;border-radius:8px;
+            color:#444;text-decoration:none;font-size:13px;
+            transition: background 0.2s ease;
+        }
+        .resume-item:hover {background:#e6f0ff;color:#0056cc;}
+        /* 中间工作区 */
+        .work-area {
+            background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:24px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .work-title {font-size:16px;font-weight:bold;color:#0056cc;margin-bottom:16px;}
+        .input-row {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+        .input-item label {display:block;font-size:13px;color:#555;margin-bottom:4px;}
+        .input-item input {
+            width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;outline:none;
+            transition: border 0.2s ease;
+        }
+        .input-item input:focus {
+            border-color: #0056cc;
+            box-shadow: 0 0 0 3px rgba(0,86,204,0.1);
+        }
+        .link-list {max-height:240px;overflow-y:auto;border:1px solid #eee;padding:10px;border-radius:8px;margin-bottom:16px;}
+        .link-item {display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid #f5f5f5;}
+        .link-item:last-child {border-bottom:none;}
+        .link-name {color:#0056cc;text-decoration:none;font-size:14px;}
+        .btn-row {display:flex;gap:12px;}
+        .btn-add,.btn-del {
+            flex:1;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
+        }
+        .btn-add:active,.btn-del:active {
+            transform: scale(0.97);
+        }
+        .btn-add {background:#0056cc;color:#fff;}
+        .btn-del {background:#ff4444;color:#fff;}
+        /* 右下角友情链接区 */
+        .friend-link-box {margin-top:30px;display:flex;justify-content:flex-end;}
+        .friend-inner {
+            width:320px;background:#fff;border-radius:12px;border:1px solid #cce0ff;
+            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
+        }
+        .friend-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
+        .link-grid {display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+        .page-link {
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            padding:12px 6px;border-radius:10px;text-decoration:none;font-size:12px;
+            transition: transform 0.2s ease;
+        }
+        .page-link:active {
+            transform: scale(0.95);
+        }
+        .link-fruit {background:#e6f9ed;color:#009944;}
+        .link-wine {background:#fff3e6;color:#cc6600;}
+        .link-script {background:#e6f0ff;color:#0056cc;}
+        /* 底部状态栏按钮 fixed固定底部，适配安全区 */
+        .status-bar {
+            position:fixed;
+            left:calc(180px + 24px);
+            bottom:calc(20px + env(safe-area-inset-bottom, 0));
+            display:flex;gap:12px;z-index:98;
+        }
+        .status-btn {
+            padding:10px 16px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;
+            transition: all 0.2s ease;
+        }
+        .status-btn:active {
+            transform: scale(0.96);
+        }
+        .happy-btn {background:linear-gradient(135deg,#ff5e99,#ff3366);}
+        .life-btn {background:linear-gradient(135deg,#ffb347,#ff8800);}
+        /* 弹窗通用样式 */
+        .mask {
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.6);z-index:999;display:none;
+            align-items:center;justify-content:center;
+        }
+        .pop-box {background:#fff;border-radius:12px;padding:24px;min-width:320px;max-width:90vw;position:relative;}
+        .pop-title {font-size:18px;font-weight:bold;margin-bottom:16px;text-align:center;}
+        .close-pop {
+            position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#888;
+            transition: color 0.2s;
+        }
+        .close-pop:hover {color:#333;}
+        /* 快乐人生弹窗 */
+        .happy-item-wrap {display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+        .happy-item {text-align:center;padding:10px;background:#ffe6ef;border-radius:10px;}
+        /* 人生必备弹窗 */
+        .life-list li {
+            list-style:none;padding:8px 12px;background:#fff3e6;border-radius:8px;margin:6px 0;
+            color:#cc6600;font-size:14px;cursor:pointer;
+            transition: background 0.2s ease;
+        }
+        .life-list li:hover {background:#ffe2c2;}
+        /* 游走悬浮二维码 */
+        .float-qr {
+            position:fixed;z-index:998;width:110px;padding:8px;
+            background:rgba(255,80,80,0.75);border:2px solid #fff;border-radius:10px;
+            text-align:center;color:#fff;pointer-events:none;
+            box-shadow: 0 4px 12px rgba(255,80,80,0.3);
+        }
+        .qr-box {width:90px;height:90px;background:#fff;border-radius:6px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#ff5050;font-size:32px;}
+        .qr-box img {width:80px;height:80px;object-fit:contain;}
+        .qr-text {font-size:12px;}
+
+        /* ===================== 移动端美化适配 ===================== */
+        /* 大屏平板 769px - 1024px 保留双栏，缩小尺寸美化 */
+        @media screen and (max-width: 1024px) and (min-width:769px) {
+            header {
+                height: 48px;
+                padding: 0 16px;
+            }
+            .header-title {
+                font-size: 26px;
+            }
+            .share-btn {
+                padding:5px 12px;
+                font-size:13px;
+            }
+            .main-wrap {
+                gap:18px;
+                margin:18px auto;
+            }
+            .left-nav {
+                padding:12px;
+            }
+            .work-area {
+                padding:18px;
+            }
+            .friend-inner {
+                width:280px;
+            }
+            .happy-item-wrap {
+                gap:10px;
+            }
+            .float-qr {
+                width:95px;
+            }
+            .qr-box {
+                width:75px;height:75px;
+            }
+            .qr-box img {
+                width:66px;height:66px;
+            }
+        }
+
+        /* 平板/手机横屏 ≤768px：改为上下堆叠布局，大幅美化 */
+        @media screen and (max-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+            /* 核心修改：双栏变上下堆叠 */
+            .main-wrap {
+                grid-template-columns: 1fr;
+                gap:16px;
+                padding:0 10px;
+                margin:16px auto;
+            }
+            /* 堆叠布局后底部按钮铺满居中，不再靠左 */
+            .status-bar {
+                left: 16px;
+                right: 16px;
+                bottom:calc(15px + env(safe-area-inset-bottom, 0));
+            }
+            .status-btn {
+                flex: 1;
+                padding:12px 0;
+                font-size:15px;
+            }
+            header {
+                height:48px;
+                padding:0 12px;
+            }
+            .header-title {
+                font-size:22px;
+            }
+            .share-btn {
+                padding:5px 12px;
+                font-size:13px;
+            }
+            .nav-title {
+                font-size:14px;
+            }
+            .resume-item {
+                font-size:14px;
+                padding:10px 12px;
+                margin:6px 0;
+            }
+            .work-title {
+                font-size:16px;
+            }
+            .input-row {
+                grid-template-columns: 1fr;
+                gap:14px;
+            }
+            .link-list {
+                max-height:180px;
+                padding:12px;
+            }
+            .friend-link-box {
+                justify-content: center;
+                margin-top:24px;
+            }
+            .friend-inner {
+                width:100%;
+                max-width: 420px;
+                padding:16px;
+            }
+            .page-link {
+                padding:14px 6px;
+                font-size:13px;
+            }
+            .float-qr {
+                width:80px;
+                padding:6px;
+            }
+            .qr-box {
+                width:60px;height:60px;
+            }
+            .qr-box img {
+                width:52px;height:52px;
+            }
+            .qr-text {
+                font-size:10px;
+            }
+            .pop-box {
+                padding:20px;
+                width: 94vw;
+            }
+            .pop-title {
+                font-size:17px;
+            }
+            .happy-item-wrap {
+                grid-template-columns: repeat(3,1fr);
+                gap:10px;
+            }
+            .happy-item {
+                padding:14px 6px;
+            }
+            .life-list li {
+                padding:12px;
+                font-size:15px;
+            }
+            .btn-add,.btn-del {
+                padding:11px;
+                font-size:15px;
+            }
+        }
+
+        /* 小屏手机竖屏 ≤480px 极致美化，适配小屏幕 */
+        @media screen and (max-width: 480px) {
+            html {
+                font-size:14px;
+            }
+            .page-container {
+                padding-bottom: 160px;
+            }
+            header {
+                height:44px;
+                padding:0 10px;
+            }
+            .header-title {
+                font-size:18px;
+            }
+            .main-wrap {
+                gap:14px;
+                margin:12px auto;
+                padding:0 8px;
+            }
+            .left-nav {
+                padding:12px;
+				text-align: center;
+            }
+            .work-area {
+                padding:16px 12px;
+            }
+            .btn-row {
+                gap:10px;
+            }
+            .btn-add,.btn-del {
+                padding:10px;
+                font-size:14px;
+            }
+            .friend-inner {
+                max-width: 100%;
+            }
+            .link-grid {
+                gap:8px;
+            }
+            .happy-item-wrap {
+                grid-template-columns: repeat(2,1fr);
+                gap:8px;
+            }
+            .float-qr {
+                width:70px;
+                padding:4px;
+            }
+            .qr-box {
+                width:52px;height:52px;
+            }
+            .qr-box img {
+                width:44px;height:44px;
+            }
+            /* 弹窗全屏无边距 */
+            .pop-box {
+                width: 96vw;
+                padding:16px 14px;
+            }
+            .pop-title {
+                font-size:16px;
+                margin-bottom:12px;
+            }
+            .close-pop {
+                font-size:24px;
+                top:8px;
+                right:10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-container">
+    <!-- 顶部菜单栏 -->
+    <header>
+        <div class="header-title">faceSystem</div>
+        <button class="share-btn" onclick="sharePage()">分享给好友</button>
+    </header>
+
+    <!-- 游走悬浮二维码 -->
+    <div class="float-qr" id="floatQr">
+        <div class="qr-box">
+            <img src="yzcode.png" alt="👄相亲">
+        </div>
+        <div class="qr-text">扫码咨询</div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="main-wrap">
+        <!-- 左侧导航区：简历PDF链接 -->
+        <div class="left-nav">
+            <div class="nav-title">PERSONAL RESUME</div>
+            <a href="jfssgcs.pdf" target="_blank" class="resume-item">弱电工程技术员</a>
+            <a href="rjxtywgcs.pdf" target="_blank" class="resume-item">系统运维工程师</a>
+            <a href="rjssgcs.pdf" target="_blank" class="resume-item">软件实施工程师</a>
+            <a href="wlywgcs.pdf" target="_blank" class="resume-item">网络运维工程师</a>
+            <a href="idcjfywgcs.pdf" target="_blank" class="resume-item">IDC机房运维工程师</a>
+            <a href="dbasjkgly.pdf" target="_blank" class="resume-item">DB A数据库 管理员</a>
+        </div>
+
+        <!-- 中间工作区：文档链接管理 -->
+        <div class="work-wrap">
+            <div class="work-area">
+                <div class="work-title">文档链接</div>
+                <div class="input-row">
+                    <div class="input-item">
+                        <label>文档显示名称</label>
+                        <input type="text" id="docName" placeholder="例：酱香酒知识库">
+                    </div>
+                    <div class="input-item">
+                        <label>PDF文件名称</label>
+                        <input type="text" id="pdfName" placeholder="例：jxjzsk.pdf">
+                    </div>
+                </div>
+                <div class="link-list" id="linkList">
+                    <div class="link-item">
+                        <input type="checkbox" class="check-item">
+                        <a href="jxjzsk.pdf" target="_blank" class="link-name">酱香酒知识库</a>
+                    </div>
+                    <div class="link-item">
+                        <input type="checkbox" class="check-item">
+                        <a href="rjkfqd.pdf" target="_blank" class="link-name">软件开发前端</a>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-add" onclick="addLink()">添加</button>
+                    <button class="btn-del" onclick="delLink()">批量删除</button>
+                </div>
+            </div>
+
+            <!-- 右下角友情链接区：三个子页面跳转 -->
+            <div class="friend-link-box">
+                <div class="friend-inner">
+                    <div class="friend-title">友情链接</div>
+                    <div class="link-grid">
+                        <a href="fruit.html" class="page-link link-fruit">🍎<span>水果农产品</span></a>
+                        <a href="index.html" class="page-link link-wine">🍷<span>酱香美酒</span></a>
+                        <a href="script.html" class="page-link link-script">💻<span>脚本之家</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部状态栏按钮 -->
+    <div class="status-bar">
+        <button class="status-btn happy-btn" onclick="openHappyMask()">快乐人生</button>
+        <button class="status-btn life-btn" onclick="openLifeMask()">人生必备</button>
+    </div>
+
+    <!-- 快乐人生弹窗遮罩 -->
+    <div class="mask" id="happyMask">
+        <div class="pop-box">
+            <span class="close-pop" onclick="closeHappyMask()">×</span>
+            <div class="pop-title">快乐人生</div>
+            <div class="happy-item-wrap">
+                <div class="happy-item">💰<br>钱</div>
+                <div class="happy-item">❤️<br>家人</div>
+                <div class="happy-item">❤️<br>爱人</div>
+                <div class="happy-item">❤️<br>朋友</div>
+                <div class="happy-item">❤️<br>狐朋狗友</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 人生必备弹窗遮罩 -->
+    <div class="mask" id="lifeMask">
+        <div class="pop-box">
+            <span class="close-pop" onclick="closeLifeMask()">×</span>
+            <div class="pop-title">Rs ability列表</div>
+            <ul class="life-list">
+                <li onclick="window.open('cash.html','_blank')">变现能力</li>
+                <li onclick="window.open('love.html','_blank')">恋爱能力</li>
+                <li onclick="window.open('talk.html','_blank')">口才、演讲、闲聊</li>
+                <li onclick="window.open('jk.html','_blank')">JK身体</li>
+                <li onclick="window.open('standard.html','_blank')">双重标准</li>
+                <li onclick="window.open('english.html','_blank')">英语口语交流、阅读</li>
+                <li onclick="window.open('write.html','_blank')">语文写作</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <script>
+        // 1、分享页面功能
+        function sharePage(){
+            const url = window.location.href;
+            if(navigator.clipboard){
+                navigator.clipboard.writeText(url).then(()=>alert("链接复制成功，可转发好友！"));
+            }else{
+                let input = document.createElement("input");
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand("copy");
+                document.body.removeChild(input);
+                alert("链接复制成功，可转发好友！");
+            }
+        }
+        // 2、文档链接添加
+        function addLink(){
+            const name = document.getElementById("docName").value.trim();
+            const pdf = document.getElementById("pdfName").value.trim();
+            if(!name || !pdf){
+                alert("文档名称和PDF文件名不能为空！");
+                return;
+            }
+            const listWrap = document.getElementById("linkList");
+            const newItem = document.createElement("div");
+            newItem.className = "link-item";
+            newItem.innerHTML = `
+                <input type="checkbox" class="check-item">
+                <a href="${pdf}" target="_blank" class="link-name">${name}</a>
+            `;
+            listWrap.appendChild(newItem);
+            document.getElementById("docName").value = "";
+            document.getElementById("pdfName").value = "";
+        }
+        // 3、批量删除勾选链接
+        function delLink(){
+            const allItems = document.querySelectorAll(".check-item");
+            let checkedList = [];
+            allItems.forEach(ck=>{
+                if(ck.checked) checkedList.push(ck.parentElement);
+            });
+            if(checkedList.length == 0){
+                alert("请先勾选需要删除的文档链接！");
+                return;
+            }
+            if(confirm(`确认删除选中的${checkedList.length}条链接？`)){
+                checkedList.forEach(item=>item.remove());
+            }
+        }
+        // 4、弹窗开关
+        function openHappyMask(){document.getElementById("happyMask").style.display = "flex";}
+        function closeHappyMask(){document.getElementById("happyMask").style.display = "none";}
+        function openLifeMask(){document.getElementById("lifeMask").style.display = "flex";}
+        function closeLifeMask(){document.getElementById("lifeMask").style.display = "none";}
+        // 5、游走二维码动画
+        const floatBox = document.getElementById("floatQr");
+        let x = 20, y = window.innerHeight / 2;
+        let vx = 1.6, vy = 1.2;
+        function moveQr(){
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            const boxW = floatBox.offsetWidth;
+            const boxH = floatBox.offsetHeight;
+            x += vx; y += vy;
+            if(x <= 0 || x + boxW >= winW) vx = -vx;
+            if(y <= 0 || y + boxH >= winH) vy = -vy;
+            floatBox.style.left = x + "px";
+            floatBox.style.top = y + "px";
+            requestAnimationFrame(moveQr);
+        }
+        moveQr();
+    </script>
+</body>
+</html>

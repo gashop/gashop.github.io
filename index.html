@@ -1,564 +1,365 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>首页</title>
-    <style>
-        * {margin: 0;padding: 0;box-sizing: border-box;font-family: "Microsoft YaHei", sans-serif;}
-        body {
-            background: linear-gradient(135deg, #f0f7ff, #ffffff);
-            min-height: 100vh;
-            overflow-x: hidden;
-            /* 适配苹果底部安全区 */
-            padding-bottom: env(safe-area-inset-bottom, 0);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>茅台镇·酱香酒</title>
+<!-- 全局酒水配置参数 -->
+<script>
+// ========== 网站酒水全局配置（完整保留，无删减） ==========
+const CONFIG = {
+    // 网站基础信息
+    siteName: "茅台镇·酱香酒",
+    copyrightYear: "2026",
+    copyrightDesc: "茅台镇 · 迎宾酒集团-小马哥 版权所有 严禁盗用",
+    statToday: "12908",
+    statTotal: "838962",
+    // 下单弹窗自动跳转微信倒计时
+    waitSecond: 15,
+    wechatJumpUrl: "weixin://",
+    // 二维码图片路径
+    qrTopRight: "./qr_top.png",
+    qrPopupBuy: "./qr_pop.png",
+    // 下单弹窗文案
+    popupTitle: "扫码联系客服下单",
+    popupHint: "微信扫描或长按二维码添加客服咨询",
+    popupCloseText: "关闭窗口",
+    // 商品数据列表【完整四款酒水，无删减】
+    goods: [
+        {
+            name: "贵州迎宾酒·经典迎宾53度",
+            desc: "纯粮坤沙工艺，酱香突出，入口绵柔，家用自饮、日常小聚优选，500ml单瓶。",
+            price: "¥198 /瓶",
+            imgSrc: "jingdian.jpg"
+        },
+        {
+            name: "贵州迎宾酒·贵宾尊享礼盒",
+            desc: "高端礼盒包装，三年大曲坤沙，送礼宴请贵客专用，500ml*2瓶装。",
+            price: "¥598 /盒",
+            imgSrc: "guibin.jpg"
+        },
+        {
+            name: "贵州迎宾酒·五年陈酿",
+            desc: "五年基酒勾调，空杯留香持久，商务聚餐、收藏送礼皆宜，500ml。",
+            price: "¥328 /瓶",
+            imgSrc: "chenliang.jpg"
+        },
+        {
+            name: "贵州迎宾酒·封坛纪念酒",
+            desc: "传统手工封坛，酒体醇厚甘甜，限量纪念款，适合宴席、收藏留念。",
+            price: "¥888 /坛",
+            imgSrc: "fengtan.jpg"
         }
-        /* 页面容器：PC固定1300px，移动端自动适配屏幕宽度 */
-        .page-container {
-            max-width: 1300px;
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-            /* 关键：底部预留超大空间，避开底部fixed按钮，友情链接不会被遮挡 */
-            padding-bottom: 130px;
-        }
-        /* 顶部菜单栏 */
-        header {
-            position: sticky;top:0;z-index:99;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(8px);
-            border-bottom:1px solid #cce0ff;
-            display:flex;justify-content:space-between;align-items:center;
-            padding:0 20px;height:56px;
-        }
-        .header-title {font-size:30px;font-weight:bold;color:#0056cc;}
-        .share-btn {
-            padding:6px 14px;background:#ff9500;color:#fff;border:none;
-            border-radius:20px;cursor:pointer;font-size:14px;
-            transition: all 0.2s ease;
-        }
-        .share-btn:active {
-            transform: scale(0.95);
-            opacity: 0.9;
-        }
-        /* 主体容器 PC固定双栏结构，永远左右并排 */
-        .main-wrap {
-            width: 100%;
-            margin:20px auto;
-            display:grid;
-            grid-template-columns:180px 1fr;
-            gap:24px;
-            padding:0 16px;
-        }
-        /* 左侧导航区 */
-        .left-nav {
-            background:#fff;border-radius:12px;border:1px solid #cce0ff;
-            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
-        }
-        .nav-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
-        .resume-item {
-            display:block;padding:8px 10px;margin:4px 0;border-radius:8px;
-            color:#444;text-decoration:none;font-size:13px;
-            transition: background 0.2s ease;
-        }
-        .resume-item:hover {background:#e6f0ff;color:#0056cc;}
-        /* 中间工作区 */
-        .work-area {
-            background:#fff;border-radius:12px;border:1px solid #cce0ff;
-            padding:24px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
-        }
-        .work-title {font-size:16px;font-weight:bold;color:#0056cc;margin-bottom:16px;}
-        .input-row {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-        .input-item label {display:block;font-size:13px;color:#555;margin-bottom:4px;}
-        .input-item input {
-            width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;outline:none;
-            transition: border 0.2s ease;
-        }
-        .input-item input:focus {
-            border-color: #0056cc;
-            box-shadow: 0 0 0 3px rgba(0,86,204,0.1);
-        }
-        .link-list {max-height:240px;overflow-y:auto;border:1px solid #eee;padding:10px;border-radius:8px;margin-bottom:16px;}
-        .link-item {display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid #f5f5f5;}
-        .link-item:last-child {border-bottom:none;}
-        .link-name {color:#0056cc;text-decoration:none;font-size:14px;}
-        .btn-row {display:flex;gap:12px;}
-        .btn-add,.btn-del {
-            flex:1;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:14px;
-            transition: all 0.2s ease;
-        }
-        .btn-add:active,.btn-del:active {
-            transform: scale(0.97);
-        }
-        .btn-add {background:#0056cc;color:#fff;}
-        .btn-del {background:#ff4444;color:#fff;}
-        /* 右下角友情链接区 */
-        .friend-link-box {margin-top:30px;display:flex;justify-content:flex-end;}
-        .friend-inner {
-            width:320px;background:#fff;border-radius:12px;border:1px solid #cce0ff;
-            padding:16px;box-shadow:0 2px 8px rgba(0,86,204,0.08);
-        }
-        .friend-title {font-size:14px;font-weight:bold;color:#0056cc;margin-bottom:12px;}
-        .link-grid {display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-        .page-link {
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            padding:12px 6px;border-radius:10px;text-decoration:none;font-size:12px;
-            transition: transform 0.2s ease;
-        }
-        .page-link:active {
-            transform: scale(0.95);
-        }
-        .link-fruit {background:#e6f9ed;color:#009944;}
-        .link-wine {background:#fff3e6;color:#cc6600;}
-        .link-script {background:#e6f0ff;color:#0056cc;}
-        /* 底部状态栏按钮 fixed固定底部，适配安全区 */
-        .status-bar {
-            position:fixed;
-            left:calc(180px + 24px);
-            bottom:calc(20px + env(safe-area-inset-bottom, 0));
-            display:flex;gap:12px;z-index:98;
-        }
-        .status-btn {
-            padding:10px 16px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;
-            transition: all 0.2s ease;
-        }
-        .status-btn:active {
-            transform: scale(0.96);
-        }
-        .happy-btn {background:linear-gradient(135deg,#ff5e99,#ff3366);}
-        .life-btn {background:linear-gradient(135deg,#ffb347,#ff8800);}
-        /* 弹窗通用样式 */
-        .mask {
-            position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.6);z-index:999;display:none;
-            align-items:center;justify-content:center;
-        }
-        .pop-box {background:#fff;border-radius:12px;padding:24px;min-width:320px;max-width:90vw;position:relative;}
-        .pop-title {font-size:18px;font-weight:bold;margin-bottom:16px;text-align:center;}
-        .close-pop {
-            position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;color:#888;
-            transition: color 0.2s;
-        }
-        .close-pop:hover {color:#333;}
-        /* 快乐人生弹窗 */
-        .happy-item-wrap {display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
-        .happy-item {text-align:center;padding:10px;background:#ffe6ef;border-radius:10px;}
-        /* 人生必备弹窗 */
-        .life-list li {
-            list-style:none;padding:8px 12px;background:#fff3e6;border-radius:8px;margin:6px 0;
-            color:#cc6600;font-size:14px;cursor:pointer;
-            transition: background 0.2s ease;
-        }
-        .life-list li:hover {background:#ffe2c2;}
-        /* 游走悬浮二维码 */
-        .float-qr {
-            position:fixed;z-index:998;width:110px;padding:8px;
-            background:rgba(255,80,80,0.75);border:2px solid #fff;border-radius:10px;
-            text-align:center;color:#fff;pointer-events:none;
-            box-shadow: 0 4px 12px rgba(255,80,80,0.3);
-        }
-        .qr-box {width:90px;height:90px;background:#fff;border-radius:6px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#ff5050;font-size:32px;}
-        .qr-box img {width:80px;height:80px;object-fit:contain;}
-        .qr-text {font-size:12px;}
+    ]
+};
+// ==================================================
+</script>
+<style>
+/* ========== 1.全局基础样式 美化优化 ========== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",SimHei,sans-serif;}
+body{
+    background:#f8f3e8;
+    padding-top:88px;
+    min-height:100vh;
+    line-height:1.7;
+}
+a{
+    text-decoration: none;
+}
 
-        /* ===================== 移动端美化适配 ===================== */
-        /* 大屏平板 769px - 1024px 保留双栏，缩小尺寸美化 */
-        @media screen and (max-width: 1024px) and (min-width:769px) {
-            header {
-                height: 48px;
-                padding: 0 16px;
-            }
-            .header-title {
-                font-size: 26px;
-            }
-            .share-btn {
-                padding:5px 12px;
-                font-size:13px;
-            }
-            .main-wrap {
-                gap:18px;
-                margin:18px auto;
-            }
-            .left-nav {
-                padding:12px;
-            }
-            .work-area {
-                padding:18px;
-            }
-            .friend-inner {
-                width:280px;
-            }
-            .happy-item-wrap {
-                gap:10px;
-            }
-            .float-qr {
-                width:95px;
-            }
-            .qr-box {
-                width:75px;height:75px;
-            }
-            .qr-box img {
-                width:66px;height:66px;
-            }
-        }
+/* ========== 2.页面头部 美化 ========== */
+.header{
+    background:#990000;
+    color:#fff;
+    padding:8px 5px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:999;
+    box-shadow: 0 2px 10px rgba(120,0,0,0.3);
+}
+.brand-title{
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+.back-home a{
+    background:#d4af37;
+    color:#800000;
+    padding:9px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:15px;
+    transition: all 0.25s ease;
+}
+.back-home a:hover{
+    background:#ffd766;
+}
 
-        /* 平板/手机横屏 ≤768px：改为上下堆叠布局，大幅美化 */
-        @media screen and (max-width: 768px) {
-            html {
-                font-size: 15px;
-            }
-            /* 核心修改：双栏变上下堆叠 */
-            .main-wrap {
-                grid-template-columns: 1fr;
-                gap:16px;
-                padding:0 10px;
-                margin:16px auto;
-            }
-            /* 堆叠布局后底部按钮铺满居中，不再靠左 */
-            .status-bar {
-                left: 16px;
-                right: 16px;
-                bottom:calc(15px + env(safe-area-inset-bottom, 0));
-            }
-            .status-btn {
-                flex: 1;
-                padding:12px 0;
-                font-size:15px;
-            }
-            header {
-                height:48px;
-                padding:0 12px;
-            }
-            .header-title {
-                font-size:22px;
-            }
-            .share-btn {
-                padding:5px 12px;
-                font-size:13px;
-            }
-            .nav-title {
-                font-size:14px;
-            }
-            .resume-item {
-                font-size:14px;
-                padding:10px 12px;
-                margin:6px 0;
-            }
-            .work-title {
-                font-size:16px;
-            }
-            .input-row {
-                grid-template-columns: 1fr;
-                gap:14px;
-            }
-            .link-list {
-                max-height:180px;
-                padding:12px;
-            }
-            .friend-link-box {
-                justify-content: center;
-                margin-top:24px;
-            }
-            .friend-inner {
-                width:100%;
-                max-width: 420px;
-                padding:16px;
-            }
-            .page-link {
-                padding:14px 6px;
-                font-size:13px;
-            }
-            .float-qr {
-                width:80px;
-                padding:6px;
-            }
-            .qr-box {
-                width:60px;height:60px;
-            }
-            .qr-box img {
-                width:52px;height:52px;
-            }
-            .qr-text {
-                font-size:10px;
-            }
-            .pop-box {
-                padding:20px;
-                width: 94vw;
-            }
-            .pop-title {
-                font-size:17px;
-            }
-            .happy-item-wrap {
-                grid-template-columns: repeat(3,1fr);
-                gap:10px;
-            }
-            .happy-item {
-                padding:14px 6px;
-            }
-            .life-list li {
-                padding:12px;
-                font-size:15px;
-            }
-            .btn-add,.btn-del {
-                padding:11px;
-                font-size:15px;
-            }
-        }
+/* ========== 3.商品主容器 美化排版 ========== */
+.container{
+    max-width:1100px;
+    margin:60px auto;
+    padding:0 25px;
+}
+.goods-main-title{
+    text-align:center;
+    font-size:26px;
+    color:#990000;
+    margin-bottom:45px;
+    border-bottom:3px solid #d4af37;
+    padding-bottom:14px;
+    width: fit-content;
+    margin-left:auto;
+    margin-right:auto;
+}
+.goods-wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+}
+.goods-card{
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 16px rgba(180,150,100,0.18);
+    border:1px solid #e8ddc8;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.goods-card:hover{
+    transform: translateY(-6px);
+    box-shadow:0 8px 24px rgba(180,150,100,0.25);
+}
+.goods-img-area{
+    width:100%;
+    height:280px;
+    background:#f1ece0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#666;
+    font-size:14px;
+    overflow:hidden;
+}
+.goods-img-area img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition: scale 0.4s ease;
+}
+.goods-card:hover .goods-img-area img{
+    scale:1.05;
+}
+.goods-info{
+    padding:22px;
+}
+.goods-name{
+    font-size:20px;
+    color:#990000;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+.goods-desc{
+    font-size:15px;
+    color:#555;
+    line-height:1.75;
+    margin-bottom:16px;
+}
+.goods-price{
+    font-size:22px;
+    color:#c00;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.buy-btn{
+    width:100%;
+    background:#990000;
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+    transition: background 0.25s ease;
+}
+.buy-btn:hover{
+    background:#b30000;
+}
 
-        /* 小屏手机竖屏 ≤480px 极致美化，适配小屏幕 */
-        @media screen and (max-width: 480px) {
-            html {
-                font-size:14px;
-            }
-            .page-container {
-                padding-bottom: 160px;
-            }
-            header {
-                height:44px;
-                padding:0 10px;
-            }
-            .header-title {
-                font-size:18px;
-            }
-            .main-wrap {
-                gap:14px;
-                margin:12px auto;
-                padding:0 8px;
-            }
-            .left-nav {
-                padding:12px;
-            }
-            .work-area {
-                padding:16px 12px;
-            }
-            .btn-row {
-                gap:10px;
-            }
-            .btn-add,.btn-del {
-                padding:10px;
-                font-size:14px;
-            }
-            .friend-inner {
-                max-width: 100%;
-            }
-            .link-grid {
-                gap:8px;
-            }
-            .happy-item-wrap {
-                grid-template-columns: repeat(2,1fr);
-                gap:8px;
-            }
-            .float-qr {
-                width:70px;
-                padding:4px;
-            }
-            .qr-box {
-                width:52px;height:52px;
-            }
-            .qr-box img {
-                width:44px;height:44px;
-            }
-            /* 弹窗全屏无边距 */
-            .pop-box {
-                width: 96vw;
-                padding:16px 14px;
-            }
-            .pop-title {
-                font-size:16px;
-                margin-bottom:12px;
-            }
-            .close-pop {
-                font-size:24px;
-                top:8px;
-                right:10px;
-            }
-        }
-    </style>
+/* ========== 5.下单弹窗样式 美化 ========== */
+.mask{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    display:none;
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+}
+.buy-popup{
+    background:#fff;
+    padding:35px;
+    border-radius:16px;
+    width:360px;
+    text-align:center;
+    box-shadow:0 6px 30px rgba(0,0,0,0.2);
+}
+.buy-popup h3{
+    color:#990000;
+    margin-bottom:18px;
+    font-size:22px;
+}
+.pop-qr{
+    width:220px;
+    height:220px;
+    margin:0 auto 18px;
+    border:1px solid #eee;
+    border-radius:8px;
+}
+.pop-tip-text{
+    font-size:16px;
+    color:#333;
+    margin-bottom:26px;
+    line-height:1.7;
+}
+.pop-close{
+    padding:11px 30px;
+    background:#990000;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    transition: background 0.25s ease;
+}
+.pop-close:hover{
+    background:#b30000;
+}
+
+/* ========== 移动端自适应 美化适配（已修复2处bug） ========== */
+@media screen and (max-width: 768px) {
+    .header {padding:14px 18px;}
+    .brand-title {font-size:22px;letter-spacing:2px;}
+    .back-home a{padding:7px 14px;font-size:14px;}
+    body{padding-top:76px;}
+    .container {margin:35px auto;padding:0 18px;}
+    .goods-main-title {font-size:22px;margin-bottom:30px;}
+    .goods-wrap {grid-template-columns: 1fr !important;gap:30px;}
+    .goods-img-area {height:220px;}
+    .goods-info{padding:18px;}
+    .goods-name {font-size:18px;}
+    .goods-price {font-size:20px;}
+
+    /* 修复2：删除弹窗左上角错位代码，恢复居中正常显示 */
+    .buy-popup {
+        width: calc(100% - 36px);
+        padding: 26px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+        /* 取消错误偏移，依靠父mask的flex自动居中 */
+        top: auto;
+        left: auto;
+        transform: none;
+    }
+    .pop-qr {
+        width:180px;
+        height:180px;
+        object-fit: contain;
+        display:block;
+        margin:0 auto;
+    }
+}
+
+</style>
 </head>
 <body>
-<div class="page-container">
-    <!-- 顶部菜单栏 -->
-    <header>
-        <div class="header-title">faceSystem</div>
-        <button class="share-btn" onclick="sharePage()">分享给好友</button>
-    </header>
-
-    <!-- 游走悬浮二维码 -->
-    <div class="float-qr" id="floatQr">
-        <div class="qr-box">
-            <img src="qrcode.png" alt="咨询二维码">
-        </div>
-        <div class="qr-text">扫码咨询</div>
+<!-- 顶部头部 -->
+<div class="header">
+    <h1 class="brand-title" id="pageTitle"></h1>
+    <div class="back-home">
+        <a href="home.html">🐍</a>
     </div>
+</div>
+<a href="fruit.html" >🍎<span>水果农产品</span></a>
+<a href="script.html" >💻<span>脚本· 超市</span></a>
 
-    <!-- 主体内容 -->
-    <div class="main-wrap">
-        <!-- 左侧导航区：简历PDF链接 -->
-        <div class="left-nav">
-            <div class="nav-title">PERSONAL RESUME</div>
-            <a href="jfssgcs.pdf" target="_blank" class="resume-item">弱电工程技术员</a>
-            <a href="rjxtywgcs.pdf" target="_blank" class="resume-item">系统运维工程师</a>
-            <a href="rjssgcs.pdf" target="_blank" class="resume-item">软件实施工程师</a>
-            <a href="wlywgcs.pdf" target="_blank" class="resume-item">网络运维工程师</a>
-            <a href="idcjfywgcs.pdf" target="_blank" class="resume-item">IDC机房运维工程师</a>
-            <a href="dbasjkgly.pdf" target="_blank" class="resume-item">DB A数据库 管理员</a>
-        </div>
+<!-- 酒水商品区域 -->
+<div class="container">
+    <h2 class="goods-main-title">贵州迎宾酒系列产品</h2>
+    <div class="goods-wrap" id="goodsContainer"></div>
+</div>
 
-        <!-- 中间工作区：文档链接管理 -->
-        <div class="work-wrap">
-            <div class="work-area">
-                <div class="work-title">文档链接</div>
-                <div class="input-row">
-                    <div class="input-item">
-                        <label>文档显示名称</label>
-                        <input type="text" id="docName" placeholder="例：酱香酒知识库">
-                    </div>
-                    <div class="input-item">
-                        <label>PDF文件名称</label>
-                        <input type="text" id="pdfName" placeholder="例：jxjzsk.pdf">
-                    </div>
-                </div>
-                <div class="link-list" id="linkList">
-                    <div class="link-item">
-                        <input type="checkbox" class="check-item">
-                        <a href="jxjzsk.pdf" target="_blank" class="link-name">酱香酒知识库</a>
-                    </div>
-                    <div class="link-item">
-                        <input type="checkbox" class="check-item">
-                        <a href="rjkfqd.pdf" target="_blank" class="link-name">软件开发前端</a>
-                    </div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-add" onclick="addLink()">添加</button>
-                    <button class="btn-del" onclick="delLink()">批量删除</button>
-                </div>
-            </div>
-
-            <!-- 右下角友情链接区：三个子页面跳转 -->
-            <div class="friend-link-box">
-                <div class="friend-inner">
-                    <div class="friend-title">友情链接</div>
-                    <div class="link-grid">
-                        <a href="fruit.html" class="page-link link-fruit">🍎<span>水果农产品</span></a>
-                        <a href="wine.html" class="page-link link-wine">🍷<span>酱香美酒</span></a>
-                        <a href="script.html" class="page-link link-script">💻<span>脚本之家</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 底部状态栏按钮 -->
-    <div class="status-bar">
-        <button class="status-btn happy-btn" onclick="openHappyMask()">快乐人生</button>
-        <button class="status-btn life-btn" onclick="openLifeMask()">人生必备</button>
-    </div>
-
-    <!-- 快乐人生弹窗遮罩 -->
-    <div class="mask" id="happyMask">
-        <div class="pop-box">
-            <span class="close-pop" onclick="closeHappyMask()">×</span>
-            <div class="pop-title">快乐人生</div>
-            <div class="happy-item-wrap">
-                <div class="happy-item">💰<br>钱</div>
-                <div class="happy-item">❤️<br>家人</div>
-                <div class="happy-item">❤️<br>爱人</div>
-                <div class="happy-item">❤️<br>朋友</div>
-                <div class="happy-item">❤️<br>狐朋狗友</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 人生必备弹窗遮罩 -->
-    <div class="mask" id="lifeMask">
-        <div class="pop-box">
-            <span class="close-pop" onclick="closeLifeMask()">×</span>
-            <div class="pop-title">Rs ability列表</div>
-            <ul class="life-list">
-                <li onclick="window.open('cash.html','_blank')">变现能力</li>
-                <li onclick="window.open('love.html','_blank')">恋爱能力</li>
-                <li onclick="window.open('talk.html','_blank')">口才、演讲、闲聊</li>
-                <li onclick="window.open('jk.html','_blank')">JK身体</li>
-                <li onclick="window.open('standard.html','_blank')">双重标准</li>
-                <li onclick="window.open('english.html','_blank')">英语口语交流、阅读</li>
-                <li onclick="window.open('write.html','_blank')">语文写作</li>
-            </ul>
-        </div>
+<!-- 酒水下单弹窗 -->
+<div class="mask" id="maskLayer">
+    <div class="buy-popup">
+        <h3 id="popTitleDom"></h3>
+        <img class="pop-qr" id="popQrDom" alt="客服下单二维码">
+        <p class="pop-tip-text" id="popTipDom"></p>
+        <button class="pop-close" id="popCloseBtn"></button>
     </div>
 </div>
 
-    <script>
-        // 1、分享页面功能
-        function sharePage(){
-            const url = window.location.href;
-            if(navigator.clipboard){
-                navigator.clipboard.writeText(url).then(()=>alert("链接复制成功，可转发好友！"));
-            }else{
-                let input = document.createElement("input");
-                input.value = url;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand("copy");
-                document.body.removeChild(input);
-                alert("链接复制成功，可转发好友！");
-            }
+<script>
+const cfg = CONFIG;
+let timerInstance = null;
+
+// 页面基础赋值
+document.getElementById("pageTitle").innerText = cfg.siteName;
+document.getElementById("popQrDom").src = cfg.qrPopupBuy;
+document.getElementById("popTitleDom").innerText = cfg.popupTitle;
+document.getElementById("popTipDom").innerText = cfg.popupHint;
+document.getElementById("popCloseBtn").innerText = cfg.popupCloseText;
+
+// 渲染酒水商品列表
+const goodsBox = document.getElementById("goodsContainer");
+cfg.goods.forEach(item => {
+    let card = document.createElement("div");
+    card.className = "goods-card";
+    card.innerHTML = `
+        <div class="goods-img-area">
+            <img src="./${item.imgSrc}" alt="${item.name}" onerror="this.parentElement.innerText='图片未找到，请核对图片文件名'">
+        </div>
+        <div class="goods-info">
+            <h3 class="goods-name">${item.name}</h3>
+            <p class="goods-desc">${item.desc}</p>
+            <div class="goods-price">售价：${item.price}</div>
+            <button class="buy-btn">立即购买</button>
+        </div>
+    `;
+    goodsBox.appendChild(card);
+});
+
+// 酒水下单弹窗完整逻辑（倒计时自动跳转微信、关闭弹窗）
+const mask = document.getElementById("maskLayer");
+const closeBtn = document.getElementById("popCloseBtn");
+const allBuyBtns = document.querySelectorAll(".buy-btn");
+function openBuyPopup(){
+    mask.style.display = "flex";
+    clearInterval(timerInstance);
+    let leftTime = cfg.waitSecond;
+    timerInstance = setInterval(()=>{
+        leftTime--;
+        if(leftTime <= 0){
+            clearInterval(timerInstance);
+            window.location.href = cfg.wechatJumpUrl;
         }
-        // 2、文档链接添加
-        function addLink(){
-            const name = document.getElementById("docName").value.trim();
-            const pdf = document.getElementById("pdfName").value.trim();
-            if(!name || !pdf){
-                alert("文档名称和PDF文件名不能为空！");
-                return;
-            }
-            const listWrap = document.getElementById("linkList");
-            const newItem = document.createElement("div");
-            newItem.className = "link-item";
-            newItem.innerHTML = `
-                <input type="checkbox" class="check-item">
-                <a href="${pdf}" target="_blank" class="link-name">${name}</a>
-            `;
-            listWrap.appendChild(newItem);
-            document.getElementById("docName").value = "";
-            document.getElementById("pdfName").value = "";
-        }
-        // 3、批量删除勾选链接
-        function delLink(){
-            const allItems = document.querySelectorAll(".check-item");
-            let checkedList = [];
-            allItems.forEach(ck=>{
-                if(ck.checked) checkedList.push(ck.parentElement);
-            });
-            if(checkedList.length == 0){
-                alert("请先勾选需要删除的文档链接！");
-                return;
-            }
-            if(confirm(`确认删除选中的${checkedList.length}条链接？`)){
-                checkedList.forEach(item=>item.remove());
-            }
-        }
-        // 4、弹窗开关
-        function openHappyMask(){document.getElementById("happyMask").style.display = "flex";}
-        function closeHappyMask(){document.getElementById("happyMask").style.display = "none";}
-        function openLifeMask(){document.getElementById("lifeMask").style.display = "flex";}
-        function closeLifeMask(){document.getElementById("lifeMask").style.display = "none";}
-        // 5、游走二维码动画
-        const floatBox = document.getElementById("floatQr");
-        let x = 20, y = window.innerHeight / 2;
-        let vx = 1.6, vy = 1.2;
-        function moveQr(){
-            const winW = window.innerWidth;
-            const winH = window.innerHeight;
-            const boxW = floatBox.offsetWidth;
-            const boxH = floatBox.offsetHeight;
-            x += vx; y += vy;
-            if(x <= 0 || x + boxW >= winW) vx = -vx;
-            if(y <= 0 || y + boxH >= winH) vy = -vy;
-            floatBox.style.left = x + "px";
-            floatBox.style.top = y + "px";
-            requestAnimationFrame(moveQr);
-        }
-        moveQr();
-    </script>
+    },1000);
+}
+function closeBuyPopup(){
+    mask.style.display = "none";
+    clearInterval(timerInstance);
+}
+allBuyBtns.forEach(btn=> btn.onclick = openBuyPopup);
+closeBtn.onclick = closeBuyPopup;
+mask.onclick = e => {if(e.target === mask) closeBuyPopup();};
+</script>
 </body>
 </html>
