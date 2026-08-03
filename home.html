@@ -121,12 +121,44 @@
         .status-btn {
             padding:10px 16px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:14px;
             transition: all 0.2s ease;
+            position: relative;
         }
         .status-btn:active {
             transform: scale(0.96);
         }
         .happy-btn {background:linear-gradient(135deg,#ff5e99,#ff3366);}
         .life-btn {background:linear-gradient(135deg,#ffb347,#ff8800);}
+        .doc-btn {background:linear-gradient(135deg,#36cbcb,#2299aa);}
+
+        /* ============资料库下拉菜单样式============ */
+        .doc-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            width: 100%; /* 和按钮同宽 */
+            margin-bottom:8px;
+            background:#ffffff;
+            border-radius:8px;
+            box-shadow:0 3px 12px rgba(0,0,0,0.15);
+            display:none;
+            overflow:hidden;
+        }
+        .doc-dropdown li {
+            list-style: none;
+            padding:10px 12px;
+            font-size:14px;
+            color:#222;
+            cursor:pointer;
+            transition: background 0.2s;
+        }
+        .doc-dropdown li:hover {
+            background:#e6f8f8;
+            color:#198888;
+        }
+        .doc-dropdown.show {
+            display:block;
+        }
+
         /* 弹窗通用样式 */
         .mask {
             position:fixed;top:0;left:0;width:100vw;height:100vh;
@@ -452,10 +484,22 @@
         </div>
     </div>
 
-    <!-- 底部状态栏按钮 -->
+    <!-- 底部状态栏按钮（资料库内置下拉菜单） -->
     <div class="status-bar">
         <button class="status-btn happy-btn" onclick="openHappyMask()">快乐人生</button>
         <button class="status-btn life-btn" onclick="openLifeMask()">人生必备</button>
+        <div class="status-btn doc-btn" id="docBtnWrap">
+            资料库
+            <!-- 下拉菜单 -->
+            <ul class="doc-dropdown" id="docDropdown">
+                <li onclick="window.open('1.pdf','_blank')">1</li>
+                <li onclick="window.open('2.pdf','_blank')">2</li>
+                <li onclick="window.open('3.pdf','_blank')">3</li>
+                <li onclick="window.open('4.pdf','_blank')">4</li>
+                <li onclick="window.open('5.pdf','_blank')">5</li>
+                <li onclick="window.open('6.pdf','_blank')">6</li>
+            </ul>
+        </div>
     </div>
 
     <!-- 快乐人生弹窗遮罩 -->
@@ -477,14 +521,14 @@
     <div class="mask" id="lifeMask">
         <div class="pop-box">
             <span class="close-pop" onclick="closeLifeMask()">×</span>
-            <div class="pop-title">Rs ability列表</div>
+            <div class="pop-title">Rs ability</div>
             <ul class="life-list">
-                <li onclick="window.open('cash.html','_blank')">变现能力</li>
-                <li onclick="window.open('love.html','_blank')">恋爱能力</li>
-                <li onclick="window.open('talk.html','_blank')">口才、演讲、闲聊</li>
-                <li onclick="window.open('jk.html','_blank')">JK身体</li>
-                <li onclick="window.open('standard.html','_blank')">双重标准</li>
-                <li onclick="window.open('english.html','_blank')">英语口语交流、阅读</li>
+                <li onclick="window.open('cash.html','_blank')">变现</li>
+                <li onclick="window.open('love.html','_blank')">恋爱</li>
+                <li onclick="window.open('talk.html','_blank')">演讲&口才&闲聊</li>
+                <li onclick="window.open('jk.html','_blank')">JK身体,胆大自信</li>
+                <li onclick="window.open('standard.html','_blank')">双标、洞察、理解、应变</li>
+                <li onclick="window.open('english.html','_blank')">英语、德语口语交流</li>
                 <li onclick="window.open('write.html','_blank')">语文写作</li>
             </ul>
         </div>
@@ -546,6 +590,22 @@
         function closeHappyMask(){document.getElementById("happyMask").style.display = "none";}
         function openLifeMask(){document.getElementById("lifeMask").style.display = "flex";}
         function closeLifeMask(){document.getElementById("lifeMask").style.display = "none";}
+
+        // =========资料库下拉菜单逻辑==========
+        const docBtnWrap = document.getElementById("docBtnWrap");
+        const docDropdown = document.getElementById("docDropdown");
+        // 点击按钮展开/收起
+        docBtnWrap.addEventListener("click",function(e){
+            e.stopPropagation();
+            docDropdown.classList.toggle("show");
+        });
+        // 点击页面空白关闭下拉
+        document.addEventListener("click",function(){
+            docDropdown.classList.remove("show");
+        });
+        // 点击下拉选项不关闭冒泡
+        docDropdown.addEventListener("click",e=>e.stopPropagation());
+
         // 5、游走二维码动画
         const floatBox = document.getElementById("floatQr");
         let x = 20, y = window.innerHeight / 2;
